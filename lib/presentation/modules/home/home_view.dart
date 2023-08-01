@@ -1,9 +1,10 @@
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
-import 'package:cubetis/presentation/modules/home/objects/enemigo.dart';
+import 'package:cubetis/presentation/modules/home/objects/empty.dart';
+import 'package:cubetis/presentation/modules/home/objects/enemy.dart';
 import 'package:cubetis/presentation/modules/home/objects/jugador.dart';
-import 'package:cubetis/presentation/modules/home/objects/meta.dart';
-import 'package:cubetis/presentation/modules/home/objects/moneda.dart';
-import 'package:cubetis/presentation/modules/home/objects/pixel.dart';
+import 'package:cubetis/presentation/modules/home/objects/finish.dart';
+import 'package:cubetis/presentation/modules/home/objects/coin.dart';
+import 'package:cubetis/presentation/modules/home/objects/wall.dart';
 import 'package:cubetis/presentation/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,7 @@ class HomeView extends ConsumerStatefulWidget {
 class _HomeViewState extends ConsumerState<HomeView> {
   Size? canvasSize;
 
-  final numPixels = numColumnas * numFilas;
+  final numPixels = kColumns * kRows;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         canvasSize = MediaQuery.of(context).size;
+        setState(() {});
       },
     );
   }
@@ -33,77 +35,130 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(homeControllerProvider);
-    final notifier = ref.watch(homeControllerProvider.notifier);
 
     return Scaffold(
-      body: SafeArea(
-          child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: numPixels,
-        itemBuilder: (BuildContext context, int index) {
-          var indexString = "";
-          cuadriculaNums == true
-              ? indexString = index.toString()
-              : indexString = "";
-
-          //nivel tutorial
-          if (nivelLActual == 0 && controller.isPlaying) {
-            if (index == 15 || index == 45) {
-              indexString = "✖";
-            }
-            if (index == 41 || index == 71 || index == 103 || index == 106) {
-              indexString = "✔";
-            }
-            if (index == 21) {
-              indexString = "${monedasR.toString()}/4";
-            }
-          }
-
-          //pintar píxeles
-          if (jugador == index) {
-            return Jugador(
-                vColor: Colors.orange,
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white)));
-          } else if (posEnemigo == index || posEnemigo2 == index) {
-            return Enemigo(
-                vColor: Colors.red,
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white)));
-          } else if (nivel.barreras.contains(index) &&
-                  nivel.enemigo.contains(index) ||
-              nivel.barreras.contains(index) &&
-                  nivel.enemigo2.contains(index)) {
-            return Pixel(
-                vColor: kColor.withOpacity(0.5),
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white, fontSize: 10)));
-          } else if (nivel.barreras.contains(index)) {
-            return Pixel(
-                vColor: kColor,
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white, fontSize: 10)));
-          } else if (nivel.monedas.contains(index)) {
-            return Moneda(
-                vColor: Colors.yellow,
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white, fontSize: 10)));
-          } else if (nivel.meta == index) {
-            return Meta(
-                vColor: Colors.white,
-                vChild: Text(indexString,
-                    style: const TextStyle(color: Colors.white, fontSize: 10)));
-          } else {
-            return (Pixel(
-                vColor: kBackgroundColor,
-                vChild: Text(indexString,
-                    style:
-                        const TextStyle(color: Colors.white, fontSize: 14))));
-          }
-        },
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: numFilas),
-      )),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Cubetis',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: canvasSize == null
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : controller.level == null
+              ? Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      startGame();
+                    },
+                    child: const Text('Start game'),
+                  ),
+                )
+              : GestureDetector(
+                  onTapDown: (details) {
+                    _onTapDown(details);
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        color: Colors.black,
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: numPixels,
+                          itemBuilder: (BuildContext context, int index) {
+                            final List<int> enemiesList = []..expand(
+                                (_) => controller.level!.enemies
+                                    .map((e) => e.enemiesPos)
+                                    .toList(),
+                              );
+                            //pintar píxeles
+                            if (controller.playerPos == index) {
+                              return const Player();
+                            } else if (enemiesList.contains(index) &&
+                                controller.level!.wallsPos.contains(index)) {
+                              return const Wall(
+                                isInEnemyPath: true,
+                              );
+                            } else if (enemiesList.contains(index)) {
+                              return const Enemy();
+                            } else if (controller.level!.wallsPos
+                                .contains(index)) {
+                              return const Wall();
+                            } else if (controller.level!.coinsPos
+                                .contains(index)) {
+                              return const Coin();
+                            } else if (controller.level!.finishPos == index) {
+                              return const Finish();
+                            } else {
+                              return const Empty();
+                            }
+                          },
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: kRows,
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        child: Text('wip'),
+                      ),
+                    ],
+                  ),
+                ),
     );
+  }
+
+  void _onTapDown(TapDownDetails details) {
+    final controller = ref.read(homeControllerProvider);
+    final notifier = ref.read(homeControllerProvider.notifier);
+    if (canvasSize == null) {
+      return;
+    }
+    if (!controller.isPlaying) {
+      // loadNivel();
+      // initJuego();
+    } else {
+      print(details.localPosition);
+      //---------------------------------------------------------------------------------------------
+      //arriba
+      if (details.localPosition.dx < details.localPosition.dy &&
+          -details.localPosition.dx < details.localPosition.dy) {
+        notifier.updatePlayerPos(controller.playerPos - kRows);
+        print('arriba');
+      } //abajo
+      else if (details.localPosition.dx > details.localPosition.dy &&
+          -details.localPosition.dx > details.localPosition.dy) {
+        notifier.updatePlayerPos(controller.playerPos + kRows);
+        print('abajo');
+      } //izquierda
+      else if (details.localPosition.dx < details.localPosition.dy &&
+          details.localPosition.dx < -details.localPosition.dy) {
+        notifier.updatePlayerPos(controller.playerPos + 1);
+        print('izquierda');
+      } //derecha
+      else if (details.localPosition.dx > details.localPosition.dy &&
+          details.localPosition.dx > -details.localPosition.dy) {
+        notifier.updatePlayerPos(controller.playerPos - 1);
+        print('derecha');
+      }
+      //---------------------------------------------------------------------------------------------
+
+      // derrotado();
+      // alLlegarMeta();
+    }
+  }
+
+  void startGame() {
+    final notifier = ref.read(homeControllerProvider.notifier);
+    notifier.loadLevel(0);
+    notifier.updateIsPlaying(true);
   }
 }

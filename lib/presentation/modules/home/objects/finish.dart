@@ -1,10 +1,10 @@
 import 'package:cubetis/presentation/utils/const.dart';
 import 'package:flutter/material.dart';
 
-class Player extends StatelessWidget {
-  const Player({
+class Finish extends StatelessWidget {
+  const Finish({
     super.key,
-    this.color = Colors.orange,
+    this.color = Colors.white,
   });
 
   final Color color;
@@ -15,11 +15,8 @@ class Player extends StatelessWidget {
       padding: const EdgeInsets.all(kPadding),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(13),
+          borderRadius: BorderRadius.circular(30),
           color: color,
-        ),
-        child: const Center(
-          child: Text("0_0"),
         ),
       ),
     );

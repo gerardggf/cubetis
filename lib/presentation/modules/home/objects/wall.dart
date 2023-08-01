@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Pixel extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final vColor;
-  // ignore: prefer_typing_uninitialized_variables
-  final vChild;
-
-  const Pixel({super.key, this.vColor, this.vChild});
+class Wall extends StatelessWidget {
+  const Wall({
+    super.key,
+    this.isInEnemyPath = false,
+    this.color = Colors.blue,
+  });
+  final Color color;
+  final bool isInEnemyPath;
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,9 @@ class Pixel extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: vColor,
+          color: color,
         ),
         padding: const EdgeInsets.all(1.0),
-        child: Center(child: vChild),
       ),
     );
   }
