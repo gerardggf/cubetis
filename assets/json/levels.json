@@ -7,29 +7,25 @@
         "enemies":[
             {
                 "id":0,
-                "enemiesPos":[5,7,5,4,2,5,6],
+                "enemiesPos":[74,75,76,77],
                 "speed":1
             },
             {
                 "id":1,
-                "enemiesPos":[5,7,5,4,2,1,3,4,5,6],
+                "enemiesPos":[94,95,96,97,98],
                 "speed":2
             },
             {
                 "id":2,
-                "enemiesPos":[5,7,5,4,2],
+                "enemiesPos":[114,115,116],
                 "speed":3
-            },
-            {
-                "id":3,
-                "enemiesPos":[5,7,5,4,2,1,3,4,5,6],
-                "speed":1
             }
-            ],
+            ],"playerPos":111,
         "finishPos":4,
         "wallsPos":[32,45],
         "creationDate":"hjasdhashdas"
-        },{
+        },
+        {
             "id":1,
             "name":"hdahsh",
             "coinsPos":[3,5,6,7,8,9,6,5],
@@ -40,6 +36,8 @@
                     "speed":1
                 }
                 ],
+            "playerPos":111,
+
             "finishPos":4,
             "wallsPos":[4,6,5],
             "creationDate":"hjasdhashdas"

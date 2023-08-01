@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const int kRows = 10;
-const int kColumns = 13;
+const int kRows = 13;
+const int kColumns = 10;
 
 const int jugadorPosOrigen = ((kRows) * (kColumns - 2)) + 1;
 
@@ -12,7 +12,7 @@ const kBackgroundColor = Colors.black;
 const kBtnSize = 60.00;
 const kFontSize = 18.00;
 //posición para que no hayan objetos en la matriz (feura del mapa)
-const noPos = 130;
+const defaultPlayerPos = 111;
 
 //===============================================================================
 

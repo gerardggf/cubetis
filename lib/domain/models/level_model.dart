@@ -4,6 +4,8 @@ class LevelModel {
   final List<int> coinsPos;
   final List<EnemyModel> enemies;
   final int finishPos;
+  final int playerPos;
+
   final List<int> wallsPos;
   final String creationDate;
 
@@ -13,6 +15,7 @@ class LevelModel {
     required this.coinsPos,
     required this.enemies,
     required this.finishPos,
+    required this.playerPos,
     required this.wallsPos,
     required this.creationDate,
   });
@@ -22,6 +25,7 @@ class LevelModel {
     String? name,
     List<int>? coinsPos,
     List<EnemyModel>? enemies,
+    int? playerPos,
     int? finishPos,
     List<int>? wallsPos,
     String? creationDate,
@@ -31,6 +35,7 @@ class LevelModel {
         name: name ?? this.name,
         coinsPos: coinsPos ?? this.coinsPos,
         enemies: enemies ?? this.enemies,
+        playerPos: playerPos ?? this.playerPos,
         finishPos: finishPos ?? this.finishPos,
         wallsPos: wallsPos ?? this.wallsPos,
         creationDate: creationDate ?? this.creationDate,
@@ -42,6 +47,7 @@ class LevelModel {
         coinsPos: List<int>.from(json["coinsPos"].map((x) => x)),
         enemies: List<EnemyModel>.from(
             json["enemies"].map((x) => EnemyModel.fromJson(x))),
+        playerPos: json["playerPos"],
         finishPos: json["finishPos"],
         wallsPos: List<int>.from(json["wallsPos"].map((x) => x)),
         creationDate: json["creationDate"],
@@ -52,6 +58,7 @@ class LevelModel {
         "name": name,
         "coinsPos": List<dynamic>.from(coinsPos.map((x) => x)),
         "enemies": List<dynamic>.from(enemies.map((x) => x.toJson())),
+        "playerPos": playerPos,
         "finishPos": finishPos,
         "wallsPos": List<dynamic>.from(wallsPos.map((x) => x)),
         "creationDate": creationDate,

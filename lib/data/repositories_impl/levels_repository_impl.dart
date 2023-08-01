@@ -1,6 +1,7 @@
 import 'package:cubetis/data/services/levels_service.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/presentation/utils/const.dart';
 
 class LevelsRepositoryImpl implements LevelsRepository {
   LevelsRepositoryImpl(this.levelsService);
@@ -8,8 +9,8 @@ class LevelsRepositoryImpl implements LevelsRepository {
   final LevelsService levelsService;
 
   @override
-  Future<LevelModel> getLevel(int levelId) {
-    return levelsService.getLevel(levelId);
+  Future<LevelModel> getLevel(int levelId) async {
+    return await levelsService.getLevel(levelId);
   }
 
   @override
@@ -28,6 +29,7 @@ class LevelsRepositoryImpl implements LevelsRepository {
       finishPos: 20,
       wallsPos: [],
       creationDate: DateTime.now().toString(),
+      playerPos: defaultPlayerPos,
     );
     return levelsService.createLevel(level);
   }

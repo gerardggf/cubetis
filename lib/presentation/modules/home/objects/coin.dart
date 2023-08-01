@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Coin extends StatelessWidget {
   const Coin({
     super.key,
-    this.color = Colors.orange,
+    this.color = Colors.yellow,
   });
 
   final Color color;
