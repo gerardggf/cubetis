@@ -21,7 +21,7 @@ const kColor = Colors.blue;
 //(bd 20) maximo de derrotas antes de reiniciar niveles
 const vidas = 20;
 //tiempo actualización enemigos
-const eTime = 250;
+const eTime = 300;
 //activar números posición en cada cuadrícula
 const cuadriculaNums = false;
 //(bd 0) nivel máximo guardado en el almacenamiento local (uNivel). Reinicia todos los niveles para que te aparezcan los niveles hasta el indicado

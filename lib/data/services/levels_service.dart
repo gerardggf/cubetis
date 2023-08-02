@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cubetis/domain/models/all_levels_model.dart';
 import 'package:cubetis/domain/models/level_model.dart';
@@ -21,8 +22,8 @@ class LevelsService {
 
   Future<bool> createLevel(LevelModel level) async {
     try {
-      final allLevels = await getAllLevels();
-      allLevels.add(level);
+      _allLevels.add(level);
+      log(jsonEncode(level));
     } catch (e) {
       if (kDebugMode) {
         print(

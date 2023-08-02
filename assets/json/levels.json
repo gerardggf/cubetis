@@ -1,46 +1,5 @@
 {
     "levels":[
-        {
-        "id":0,
-        "name":"hdahsh",
-        "coinsPos":[3,5,6,7,8,9,6,5],
-        "enemies":[
-            {
-                "id":0,
-                "enemiesPos":[74,75,76,77],
-                "speed":1
-            },
-            {
-                "id":1,
-                "enemiesPos":[94,95,96,97,98],
-                "speed":2
-            },
-            {
-                "id":2,
-                "enemiesPos":[114,115,116],
-                "speed":3
-            }
-            ],"playerPos":111,
-        "finishPos":4,
-        "wallsPos":[32,45],
-        "creationDate":"hjasdhashdas"
-        },
-        {
-            "id":1,
-            "name":"hdahsh",
-            "coinsPos":[3,5,6,7,8,9,6,5],
-            "enemies":[
-                {
-                    "id":0,
-                    "enemiesPos":[5,7,5,4,2,5,6],
-                    "speed":1
-                }
-                ],
-            "playerPos":111,
-
-            "finishPos":4,
-            "wallsPos":[4,6,5],
-            "creationDate":"hjasdhashdas"
-            }
+        {"id":1,"name":"","coinsPos":[97,107,92,102,93,103],"enemies":[{"id":0,"enemiesPos":[61,51,41,42,43,44,54,64,63,62,46,56,66,67,68,58,48,38,28,18,17,16,15,14,13,23,24,25,26,36],"speed":1}],"playerPos":111,"finishPos":11,"wallsPos":[121,122,123,124,125,126,127,128,119,109,129,99,79,69,49,39,29,19,9,8,6,7,5,4,3,2,1,0,10,20,30,40,50,60,70,90,100,110,120,115,105,95,85,75,65,55,45],"creationDate":"2023-08-02 16:39:09.700970"}
     ]
 }

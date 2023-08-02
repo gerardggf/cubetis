@@ -1,5 +1,5 @@
 import 'package:cubetis/domain/models/level_model.dart';
-import 'package:cubetis/presentation/utils/const.dart';
+import 'package:cubetis/const/const.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'home_state.freezed.dart';

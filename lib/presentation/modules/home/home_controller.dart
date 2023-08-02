@@ -1,6 +1,6 @@
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/presentation/modules/home/state/home_state.dart';
-import 'package:cubetis/presentation/utils/const.dart';
+import 'package:cubetis/const/const.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final homeControllerProvider = StateNotifierProvider<HomeController, HomeState>(
@@ -45,6 +45,5 @@ class HomeController extends StateNotifier<HomeState> {
   Future<void> loadLevel(int levelId) async {
     final level = await levelsRepository.getLevel(levelId);
     state = state.copyWith(level: level);
-    print(level.id);
   }
 }

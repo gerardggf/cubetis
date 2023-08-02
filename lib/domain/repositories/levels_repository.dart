@@ -10,6 +10,7 @@ final levelsRepositoryProvider = Provider<LevelsRepository>(
 );
 
 abstract class LevelsRepository {
+  List<LevelModel> get allLevels;
   Future<LevelModel> getLevel(int levelId);
   Future<bool> createLevel(LevelModel level);
 }

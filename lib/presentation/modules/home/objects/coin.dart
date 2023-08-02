@@ -1,4 +1,4 @@
-import 'package:cubetis/presentation/utils/const.dart';
+import 'package:cubetis/const/const.dart';
 import 'package:flutter/material.dart';
 
 class Coin extends StatelessWidget {
