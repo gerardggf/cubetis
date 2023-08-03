@@ -1,11 +1,11 @@
 import 'package:cubetis/const/const.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
-import 'package:cubetis/presentation/modules/home/objects/coin.dart';
-import 'package:cubetis/presentation/modules/home/objects/empty.dart';
-import 'package:cubetis/presentation/modules/home/objects/enemy.dart';
-import 'package:cubetis/presentation/modules/home/objects/finish.dart';
-import 'package:cubetis/presentation/modules/home/objects/jugador.dart';
-import 'package:cubetis/presentation/modules/home/objects/wall.dart';
+import 'package:cubetis/presentation/objects/coin.dart';
+import 'package:cubetis/presentation/objects/empty.dart';
+import 'package:cubetis/presentation/objects/enemy.dart';
+import 'package:cubetis/presentation/objects/finish.dart';
+import 'package:cubetis/presentation/objects/jugador.dart';
+import 'package:cubetis/presentation/objects/wall.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,11 +27,16 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(homeControllerProvider);
+    final notifier = ref.watch(homeControllerProvider.notifier);
+
     return Column(
       children: [
         GestureDetector(
           onTapDown: (details) {
-            _onTapDown(details);
+            notifier.onScreenTapDown(
+              details: details,
+              canvasSize: widget.canvasSize,
+            );
           },
           child: Container(
             color: Colors.black,
@@ -55,14 +60,15 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                   return const Enemy();
                 } else if (controller.level!.wallsPos.contains(index)) {
                   return const Wall();
-                } else if (controller.level!.coinsPos.contains(index)) {
+                } else if (controller.level!.coinsPos.contains(index) &&
+                    !controller.points.contains(index)) {
                   return const Coin();
                 } else if (controller.level!.finishPos == index) {
                   return const Finish();
                 } else {
-                  return Empty(
-                    index: index,
-                  );
+                  return const Empty(
+                      //index: index,
+                      );
                 }
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -71,44 +77,171 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
             ),
           ),
         ),
-        const Expanded(
-          child: Text('wip'),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                color: Colors.yellow,
+                child: Column(
+                  children: [
+                    const Text('Points'),
+                    Text(
+                      controller.points.length.toString(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                color: Colors.orange,
+                child: const Column(
+                  children: [
+                    Text('Lifes'),
+                    Text(
+                      '1',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: _buildButtonControl(notifier),
         ),
       ],
     );
   }
 
-  void _onTapDown(TapDownDetails details) {
-    final controller = ref.read(homeControllerProvider);
-    final notifier = ref.read(homeControllerProvider.notifier);
-    if (widget.canvasSize == null) {
-      return;
-    }
-    if (!controller.isPlaying) {
-      // loadNivel();
-      // initJuego();
-    } else {
-      final dx = details.localPosition.dx - (widget.canvasSize!.width / 2);
-      final dy = details.localPosition.dy -
-          ((widget.canvasSize!.width / kColumns) * kRows / 2);
-      // print('dx: $dx');
-      // print('dy: $dy');
-
-      //arriba
-      if (dx > dy && -dx > dy) {
-        notifier.updatePlayerPos(controller.playerPos - kColumns);
-      } //abajo
-      else if (dx < dy && -dx < dy) {
-        notifier.updatePlayerPos(controller.playerPos + kColumns);
-      } //izquierda
-      else if (dx < dy && dx < -dy) {
-        notifier.updatePlayerPos(controller.playerPos - 1);
-      } //derecha
-      else if (dx > dy && dx > -dy) {
-        notifier.updatePlayerPos(controller.playerPos + 1);
-      }
-      // derrotado();
-      // alLlegarMeta();
-    }
-  }
+  Widget _buildButtonControl(HomeController notifier) => Row(
+        children: [
+          const Expanded(
+            child: SizedBox(),
+          ),
+          Expanded(
+            flex: 5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => notifier.onButtonDown(
+                          direction: 0,
+                          canvasSize: widget.canvasSize,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: 50,
+                          height: 50,
+                          child: const Icon(
+                            Icons.arrow_drop_up,
+                            size: kBtnSize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => notifier.onButtonDown(
+                          direction: 2,
+                          canvasSize: widget.canvasSize,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: 50,
+                          height: 50,
+                          child: const Icon(
+                            Icons.arrow_left,
+                            size: kBtnSize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => notifier.onButtonDown(
+                          direction: 3,
+                          canvasSize: widget.canvasSize,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: 50,
+                          height: 50,
+                          child: const Icon(
+                            Icons.arrow_right,
+                            size: kBtnSize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => notifier.onButtonDown(
+                          direction: 1,
+                          canvasSize: widget.canvasSize,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: 50,
+                          height: 50,
+                          child: const Icon(
+                            Icons.arrow_drop_down,
+                            size: kBtnSize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Expanded(
+            child: SizedBox(),
+          ),
+        ],
+      );
 }

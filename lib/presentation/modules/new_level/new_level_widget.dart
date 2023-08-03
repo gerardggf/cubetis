@@ -1,10 +1,10 @@
 import 'package:cubetis/const/const.dart';
-import 'package:cubetis/presentation/modules/home/objects/coin.dart';
-import 'package:cubetis/presentation/modules/home/objects/empty.dart';
-import 'package:cubetis/presentation/modules/home/objects/enemy.dart';
-import 'package:cubetis/presentation/modules/home/objects/finish.dart';
-import 'package:cubetis/presentation/modules/home/objects/jugador.dart';
-import 'package:cubetis/presentation/modules/home/objects/wall.dart';
+import 'package:cubetis/presentation/objects/coin.dart';
+import 'package:cubetis/presentation/objects/empty.dart';
+import 'package:cubetis/presentation/objects/enemy.dart';
+import 'package:cubetis/presentation/objects/finish.dart';
+import 'package:cubetis/presentation/objects/jugador.dart';
+import 'package:cubetis/presentation/objects/wall.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

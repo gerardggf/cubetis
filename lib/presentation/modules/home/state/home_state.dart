@@ -9,7 +9,7 @@ class HomeState with _$HomeState {
   factory HomeState({
     @Default(false) bool fetching,
     @Default(false) bool isPlaying,
-    @Default(0) int points,
+    @Default([]) List<int> points,
     @Default(null) LevelModel? level,
     @Default(defaultPlayerPos) int playerPos,
     @Default([]) List<int> enemiesPos,

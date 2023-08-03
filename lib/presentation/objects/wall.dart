@@ -4,9 +4,9 @@ class Wall extends StatelessWidget {
   const Wall({
     super.key,
     this.isInEnemyPath = false,
-    this.color = Colors.blue,
+    //this.color = Colors.blue,
   });
-  final Color color;
+  //final Color color;
   final bool isInEnemyPath;
 
   @override
@@ -15,8 +15,16 @@ class Wall extends StatelessWidget {
       padding: const EdgeInsets.all(1.0),
       child: Container(
         decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/img/wall.png'),
+            opacity: isInEnemyPath ? 0.6 : 1,
+            colorFilter: ColorFilter.mode(
+              isInEnemyPath ? Colors.transparent : Colors.brown,
+              BlendMode.color,
+            ),
+          ),
           borderRadius: BorderRadius.circular(5),
-          color: color,
+          //color: color,
         ),
         padding: const EdgeInsets.all(1.0),
       ),

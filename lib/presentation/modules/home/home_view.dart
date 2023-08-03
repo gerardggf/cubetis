@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cubetis/presentation/modules/home/game_widget.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
-import 'package:cubetis/const/const.dart';
 import 'package:cubetis/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,12 +60,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : controller.level == null
+          : controller.level == null || !controller.isPlaying
               ? Center(
                   child: ElevatedButton(
                     onPressed: () async {
                       await notifier.loadLevel(0);
-                      await startGame();
+                      await notifier.startGame();
                     },
                     child: const Text('Start game'),
                   ),
@@ -75,40 +74,5 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   canvasSize: canvasSize,
                 ),
     );
-  }
-
-  Future<void> startGame() async {
-    final controller = ref.read(homeControllerProvider);
-    final notifier = ref.read(homeControllerProvider.notifier);
-
-    notifier.updateIsPlaying(true);
-
-    final enemiesPos =
-        controller.level!.enemies.map((e) => e.enemiesPos).toList();
-
-    List<int> indexCounters = List.generate(enemiesPos.length, (index) => 0);
-    List<int> currentEnemiesPos =
-        List.generate(enemiesPos.length, (index) => 0);
-
-    timer = Timer.periodic(
-      const Duration(milliseconds: eTime),
-      (_) {
-        for (var i = 0; i < enemiesPos.length; i++) {
-          indexCounters[i]++;
-          if (indexCounters[i] >= enemiesPos[i].length) {
-            indexCounters[i] = 0;
-          }
-          currentEnemiesPos[i] = enemiesPos[i][indexCounters[i]];
-        }
-
-        notifier.updateEnemiesPos(currentEnemiesPos);
-      },
-    );
-  }
-
-  void endGame() {
-    final notifier = ref.read(homeControllerProvider.notifier);
-    notifier.updateIsPlaying(false);
-    timer?.cancel();
   }
 }

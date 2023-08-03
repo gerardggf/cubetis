@@ -17,6 +17,13 @@ class Coin extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: color,
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 3,
+              color: Colors.yellow,
+              spreadRadius: 1,
+            ),
+          ],
         ),
       ),
     );

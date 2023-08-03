@@ -1,3 +1,4 @@
+import 'package:cubetis/const/const.dart';
 import 'package:flutter/material.dart';
 
 class Empty extends StatelessWidget {
@@ -9,7 +10,8 @@ class Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: kBackgroundColor,
       child: index != null
           ? Center(
               child: Text(
