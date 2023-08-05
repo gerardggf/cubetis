@@ -11,16 +11,35 @@ class Enemy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(kPadding),
-        child: Container(
+    return Stack(
+      children: [
+        Transform(
+          transform: Matrix4.rotationZ(20),
+          child: Container(
+            height: 3,
+            color: Colors.grey,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(kPadding + 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: color,
+            //color: color,
+
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.redAccent,
+                color,
+              ],
+            ),
           ),
           child: const Center(
             child: Text("ò_ó"),
           ),
-        ));
+        ),
+      ],
+    );
   }
 }

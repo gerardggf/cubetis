@@ -13,10 +13,18 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(kPadding),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(seconds: 1),
+        curve: Curves.bounceIn,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(13),
           color: color,
+          gradient: LinearGradient(
+            colors: [
+              Colors.deepOrange,
+              color,
+            ],
+          ),
         ),
         child: const Center(
           child: Text("0_0"),

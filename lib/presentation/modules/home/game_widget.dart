@@ -51,13 +51,13 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                 }
                 if (controller.playerPos == index) {
                   return const Player();
+                } else if (controller.enemiesPos.contains(index)) {
+                  return const Enemy();
                 } else if (enemiesList.contains(index) &&
                     controller.level!.wallsPos.contains(index)) {
                   return const Wall(
                     isInEnemyPath: true,
                   );
-                } else if (controller.enemiesPos.contains(index)) {
-                  return const Enemy();
                 } else if (controller.level!.wallsPos.contains(index)) {
                   return const Wall();
                 } else if (controller.level!.coinsPos.contains(index) &&
@@ -109,139 +109,138 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
             ),
           ],
         ),
-        Expanded(
-          child: _buildButtonControl(notifier),
-        ),
+        const Expanded(child: SizedBox() //, _buildButtonControl(notifier),
+            ),
       ],
     );
   }
 
-  Widget _buildButtonControl(HomeController notifier) => Row(
-        children: [
-          const Expanded(
-            child: SizedBox(),
-          ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => notifier.onButtonDown(
-                          direction: 0,
-                          canvasSize: widget.canvasSize,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          width: 50,
-                          height: 50,
-                          child: const Icon(
-                            Icons.arrow_drop_up,
-                            size: kBtnSize,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => notifier.onButtonDown(
-                          direction: 2,
-                          canvasSize: widget.canvasSize,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          width: 50,
-                          height: 50,
-                          child: const Icon(
-                            Icons.arrow_left,
-                            size: kBtnSize,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => notifier.onButtonDown(
-                          direction: 3,
-                          canvasSize: widget.canvasSize,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          width: 50,
-                          height: 50,
-                          child: const Icon(
-                            Icons.arrow_right,
-                            size: kBtnSize,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => notifier.onButtonDown(
-                          direction: 1,
-                          canvasSize: widget.canvasSize,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          width: 50,
-                          height: 50,
-                          child: const Icon(
-                            Icons.arrow_drop_down,
-                            size: kBtnSize,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Expanded(
-            child: SizedBox(),
-          ),
-        ],
-      );
+  // Widget _buildButtonControl(HomeController notifier) => Row(
+  //       children: [
+  //         const Expanded(
+  //           child: SizedBox(),
+  //         ),
+  //         Expanded(
+  //           flex: 5,
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: [
+  //               Row(
+  //                 children: [
+  //                   const Expanded(
+  //                     child: SizedBox(),
+  //                   ),
+  //                   Expanded(
+  //                     child: GestureDetector(
+  //                       onTap: () => notifier.onButtonDown(
+  //                         direction: 0,
+  //                         canvasSize: widget.canvasSize,
+  //                       ),
+  //                       child: Container(
+  //                         decoration: BoxDecoration(
+  //                             color: kColor,
+  //                             borderRadius: BorderRadius.circular(10)),
+  //                         width: 50,
+  //                         height: 50,
+  //                         child: const Icon(
+  //                           Icons.arrow_drop_up,
+  //                           size: kBtnSize,
+  //                           color: Colors.white,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Expanded(
+  //                     child: SizedBox(),
+  //                   ),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   Expanded(
+  //                     child: GestureDetector(
+  //                       onTap: () => notifier.onButtonDown(
+  //                         direction: 2,
+  //                         canvasSize: widget.canvasSize,
+  //                       ),
+  //                       child: Container(
+  //                         decoration: BoxDecoration(
+  //                             color: kColor,
+  //                             borderRadius: BorderRadius.circular(10)),
+  //                         width: 50,
+  //                         height: 50,
+  //                         child: const Icon(
+  //                           Icons.arrow_left,
+  //                           size: kBtnSize,
+  //                           color: Colors.white,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Expanded(
+  //                     child: SizedBox(),
+  //                   ),
+  //                   Expanded(
+  //                     child: GestureDetector(
+  //                       onTap: () => notifier.onButtonDown(
+  //                         direction: 3,
+  //                         canvasSize: widget.canvasSize,
+  //                       ),
+  //                       child: Container(
+  //                         decoration: BoxDecoration(
+  //                             color: kColor,
+  //                             borderRadius: BorderRadius.circular(10)),
+  //                         width: 50,
+  //                         height: 50,
+  //                         child: const Icon(
+  //                           Icons.arrow_right,
+  //                           size: kBtnSize,
+  //                           color: Colors.white,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 children: [
+  //                   const Expanded(
+  //                     child: SizedBox(),
+  //                   ),
+  //                   Expanded(
+  //                     child: GestureDetector(
+  //                       onTap: () => notifier.onButtonDown(
+  //                         direction: 1,
+  //                         canvasSize: widget.canvasSize,
+  //                       ),
+  //                       child: Container(
+  //                         decoration: BoxDecoration(
+  //                             color: kColor,
+  //                             borderRadius: BorderRadius.circular(10)),
+  //                         width: 50,
+  //                         height: 50,
+  //                         child: const Icon(
+  //                           Icons.arrow_drop_down,
+  //                           size: kBtnSize,
+  //                           color: Colors.white,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Expanded(
+  //                     child: SizedBox(),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         const Expanded(
+  //           child: SizedBox(),
+  //         ),
+  //       ],
+  //     );
 }
