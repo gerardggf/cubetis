@@ -22,15 +22,16 @@ class NewLevelWidget extends ConsumerStatefulWidget {
 }
 
 class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
-  final int numCells = kColumns * kRows;
+  final int numCells = GameParams.columns * GameParams.rows;
 
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(newLevelControllerProvider);
     final notifier = ref.watch(newLevelControllerProvider.notifier);
 
-    final double objectButtonSize =
-        widget.canvasSize == null ? 0 : widget.canvasSize!.width / kColumns;
+    final double objectButtonSize = widget.canvasSize == null
+        ? 0
+        : widget.canvasSize!.width / GameParams.columns;
 
     return Column(
       children: [
@@ -92,7 +93,7 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
               );
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: kColumns,
+              crossAxisCount: GameParams.columns,
             ),
           ),
         ),

@@ -17,7 +17,17 @@ class LevelsService {
   List<LevelModel> get allLevels => _allLevels;
 
   Future<LevelModel> getLevel(int levelId) async {
-    return (await getAllLevels())[levelId];
+    try {
+      if (allLevels.isEmpty) {
+        await getAllLevels();
+      }
+      return allLevels[levelId];
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return allLevels.last;
+    }
   }
 
   Future<bool> createLevel(LevelModel level) async {

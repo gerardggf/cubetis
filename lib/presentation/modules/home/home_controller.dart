@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/presentation/modules/home/state/home_state.dart';
 import 'package:cubetis/const/const.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,17 +25,31 @@ class HomeController extends StateNotifier<HomeState> {
   Timer? timer;
 
   void _updatePlayerPos(int newPos) {
+    if (state.level == null) return;
     //tp from right to left when out of map
-    if (newPos % kColumns == 0 && newPos > state.playerPos) {
-      newPos -= kColumns;
+    if (newPos % GameParams.columns == 0 && newPos == state.playerPos + 1) {
+      newPos -= GameParams.columns;
     }
 
     //tp from left to right when out of map
-    if ((newPos + 1) % kColumns == 0 && newPos < state.playerPos) {
-      newPos += kColumns;
+    if ((newPos + 1) % GameParams.columns == 0 &&
+        newPos == state.playerPos - 1) {
+      newPos += GameParams.columns;
     }
 
-    //adding points
+    //tp up to down when out of map
+    if (newPos > (GameParams.rows * GameParams.columns)) {
+      newPos -= GameParams.rows * GameParams.columns;
+    }
+
+    //tp down to up when out of map
+    if (newPos.isNegative) {
+      newPos += GameParams.rows * GameParams.columns;
+    }
+
+    //------------------------------------------------
+
+    //counting points
     if (state.level!.coinsPos.contains(newPos) &&
         !state.points.contains(newPos)) {
       updatePoints(newPos);
@@ -43,15 +58,36 @@ class HomeController extends StateNotifier<HomeState> {
     //walls stopping player movement
     if (state.level!.wallsPos.contains(newPos) ||
         newPos < 0 ||
-        newPos >= kRows * kColumns) {
+        newPos >= (GameParams.columns * GameParams.rows)) {
       return;
     }
 
+    //hit by enemy
+    if (state.enemiesPos.contains(newPos) ||
+        state.enemiesPos.contains(state.playerPos)) {
+      _hitByEnemy();
+    }
+
+    //finish level
+    if (state.level!.finishPos == newPos &&
+        state.points.length == state.level!.coinsPos.length) {
+      loadLevel(state.level!.id + 1);
+      clearPoints();
+      if (kDebugMode) {
+        print('Nivel ${state.level!.id + 1}');
+      }
+    }
+
+    //update player pos
     state = state.copyWith(playerPos: newPos);
   }
 
   void updateEnemiesPos(List<int> enemiesPos) {
     state = state.copyWith(enemiesPos: enemiesPos);
+  }
+
+  void updatePlayerLives(int value) {
+    state = state.copyWith(lives: value);
   }
 
   void updateIsPlaying(bool value) {
@@ -60,7 +96,9 @@ class HomeController extends StateNotifier<HomeState> {
 
   Future<void> loadLevel(int levelId) async {
     final level = await levelsRepository.getLevel(levelId);
+    state = state.copyWith(playerPos: level.playerPos);
     state = state.copyWith(level: level);
+    _updateCurrentEnemies();
   }
 
   //points -------------------------------
@@ -74,11 +112,24 @@ class HomeController extends StateNotifier<HomeState> {
     state = state.copyWith(points: []);
   }
 
+  //enemy ------------------------------------
+
+  void _hitByEnemy() {
+    updatePlayerLives(state.lives - 1);
+    loadLevel(state.level!.id);
+    clearPoints();
+  }
+
   //-----------------------------------------
 
-  Future<void> startGame() async {
+  void startGame() {
+    if (state.level == null) return;
     updateIsPlaying(true);
+  }
 
+  void _updateCurrentEnemies() {
+    timer?.cancel();
+    updateEnemiesPos([]);
     final enemiesPos = state.level!.enemies
         .map(
           (e) => e.enemiesPos,
@@ -90,7 +141,7 @@ class HomeController extends StateNotifier<HomeState> {
         List.generate(enemiesPos.length, (index) => 0);
 
     timer = Timer.periodic(
-      const Duration(milliseconds: eTime),
+      const Duration(milliseconds: GameParams.enemyUpdateTime),
       (_) {
         for (var i = 0; i < enemiesPos.length; i++) {
           indexCounters[i]++;
@@ -101,6 +152,10 @@ class HomeController extends StateNotifier<HomeState> {
         }
 
         updateEnemiesPos(currentEnemiesPos);
+
+        if (currentEnemiesPos.contains(state.playerPos)) {
+          _hitByEnemy();
+        }
       },
     );
   }
@@ -123,16 +178,16 @@ class HomeController extends StateNotifier<HomeState> {
     } else {
       final dx = details.localPosition.dx - (canvasSize.width / 2);
       final dy = details.localPosition.dy -
-          ((canvasSize.width / kColumns) * kRows / 2);
+          ((canvasSize.width / GameParams.columns) * GameParams.rows / 2);
       // print('dx: $dx');
       // print('dy: $dy');
 
       //arriba
       if (dx > dy && -dx > dy) {
-        _updatePlayerPos(state.playerPos - kColumns);
+        _updatePlayerPos(state.playerPos - GameParams.columns);
       } //abajo
       else if (dx < dy && -dx < dy) {
-        _updatePlayerPos(state.playerPos + kColumns);
+        _updatePlayerPos(state.playerPos + GameParams.columns);
       } //izquierda
       else if (dx < dy && dx < -dy) {
         _updatePlayerPos(state.playerPos - 1);
@@ -158,10 +213,10 @@ class HomeController extends StateNotifier<HomeState> {
     } else {
       //arriba
       if (direction == 0) {
-        _updatePlayerPos(state.playerPos - kColumns);
+        _updatePlayerPos(state.playerPos - GameParams.columns);
       } //abajo
       else if (direction == 1) {
-        _updatePlayerPos(state.playerPos + kColumns);
+        _updatePlayerPos(state.playerPos + GameParams.columns);
       } //izquierda
       else if (direction == 2) {
         _updatePlayerPos(state.playerPos - 1);

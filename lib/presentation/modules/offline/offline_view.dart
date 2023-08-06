@@ -7,7 +7,12 @@ class OfflineView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('No tienes conexión a Internet'),
+        child: Text(
+          'No tienes conexión a Internet',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

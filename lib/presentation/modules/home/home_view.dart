@@ -36,14 +36,20 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Cubetis',
-          style: TextStyle(
+        title: Text(
+          'Nivel ${controller.level?.id ?? ''}',
+          style: const TextStyle(
             color: Colors.black,
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            context.pushNamed(Routes.levels);
+          },
+          icon: const Icon(Icons.menu),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -65,7 +71,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   child: ElevatedButton(
                     onPressed: () async {
                       await notifier.loadLevel(0);
-                      await notifier.startGame();
+                      notifier.startGame();
                     },
                     child: const Text('Start game'),
                   ),
