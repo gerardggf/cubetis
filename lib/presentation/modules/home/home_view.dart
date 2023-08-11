@@ -31,13 +31,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(homeControllerProvider);
-    final notifier = ref.watch(homeControllerProvider.notifier);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Nivel ${controller.level?.id ?? ''}',
+          'Nivel ${controller.level?.id ?? '0'}',
           style: const TextStyle(
             color: Colors.black,
           ),
@@ -66,19 +64,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : controller.level == null || !controller.isPlaying
-              ? Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await notifier.loadLevel(0);
-                      notifier.startGame();
-                    },
-                    child: const Text('Start game'),
-                  ),
-                )
-              : GameWidget(
-                  canvasSize: canvasSize,
-                ),
+          : GameWidget(
+              canvasSize: canvasSize,
+            ),
     );
   }
 }

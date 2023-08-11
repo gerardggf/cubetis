@@ -3,7 +3,7 @@ import 'package:cubetis/presentation/objects/coin.dart';
 import 'package:cubetis/presentation/objects/empty.dart';
 import 'package:cubetis/presentation/objects/enemy.dart';
 import 'package:cubetis/presentation/objects/finish.dart';
-import 'package:cubetis/presentation/objects/jugador.dart';
+import 'package:cubetis/presentation/objects/player.dart';
 import 'package:cubetis/presentation/objects/wall.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +76,11 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                         isInEnemyPath: true,
                       );
                     } else if (enemiesList.contains(index)) {
-                      return const Enemy();
+                      return Enemy(
+                        enemyIndex: controller.enemiesPos.first.enemiesPos
+                                .indexOf(index) +
+                            1,
+                      );
                     } else if (controller.wallsPos.contains(index)) {
                       return const Wall();
                     } else if (controller.coinsPos.contains(index)) {

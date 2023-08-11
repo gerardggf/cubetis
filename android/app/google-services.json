@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982677479158",
+    "project_id": "cubets-d458b",
+    "storage_bucket": "cubets-d458b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982677479158:android:59c79898ed17c5e0d3d6d7",
+        "android_client_info": {
+          "package_name": "com.sanfaina.cubetis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982677479158-5g77jvcurvh02v43nq52p6he0psudhvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrnO8O7-U4vEvH9s0SREwjwJlCZWiqk0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982677479158-5g77jvcurvh02v43nq52p6he0psudhvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

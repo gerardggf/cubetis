@@ -95,7 +95,7 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   Future<void> loadLevel(int levelId) async {
-    final level = await levelsRepository.getLevel(levelId);
+    final level = levelsRepository.allLevels[levelId];
     state = state.copyWith(playerPos: level.playerPos);
     state = state.copyWith(level: level);
     _updateCurrentEnemies();

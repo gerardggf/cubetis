@@ -12,11 +12,11 @@ class Player extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      margin: const EdgeInsets.all(kPadding + 2),
+      margin: const EdgeInsets.all(kPadding),
       duration: const Duration(seconds: 1),
       curve: Curves.bounceIn,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: BorderRadius.circular(10),
         color: color,
         gradient: LinearGradient(
           colors: [

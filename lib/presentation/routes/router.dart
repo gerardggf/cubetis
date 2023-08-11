@@ -11,11 +11,6 @@ import 'routes.dart';
 mixin RouterMixin on State<MyApp> {
   final router = GoRouter(
     routes: [
-      // GoRoute(
-      //   name: Routes.splash,
-      //   path: '/',
-      //   builder: (_, __) => const SplashView(),
-      // ),
       GoRoute(
         name: Routes.home,
         path: '/',

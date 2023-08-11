@@ -1,38 +1,40 @@
-import 'package:cubetis/data/services/levels_service.dart';
+import 'package:cubetis/data/services/firebase_firestore_service.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 
 class LevelsRepositoryImpl implements LevelsRepository {
-  LevelsRepositoryImpl(this.levelsService);
+  LevelsRepositoryImpl(this.firebaseFirestoreService);
 
-  final LevelsService levelsService;
-
-  @override
-  Future<LevelModel> getLevel(int levelId) async {
-    return await levelsService.getLevel(levelId);
-  }
+  final FirebaseFirestoreService firebaseFirestoreService;
 
   @override
   Future<bool> createLevel(LevelModel level) {
-    // level = LevelModel(
-    //   id: 0,
-    //   name: 'eee',
-    //   coinsPos: [],
-    //   enemies: [
-    //     EnemyModel(
-    //       id: 0,
-    //       enemiesPos: [4, 5],
-    //       speed: 1,
-    //     ),
-    //   ],
-    //   finishPos: 20,
-    //   wallsPos: [],
-    //   creationDate: DateTime.now().toString(),
-    //   playerPos: defaultPlayerPos,
-    // );
-    return levelsService.createLevel(level);
+    return firebaseFirestoreService.createLevel(level);
   }
 
   @override
-  List<LevelModel> get allLevels => levelsService.allLevels;
+  Future<bool> deleteLevel(String id) {
+    return firebaseFirestoreService.deleteLevel(id);
+  }
+
+  @override
+  Stream<List<LevelModel>> subscribeToLevels() {
+    return firebaseFirestoreService.subscribeToLevels();
+  }
+
+  @override
+  Future<bool> updateLevel({required String id, required LevelModel level}) {
+    return firebaseFirestoreService.updateLevel(
+      id: id,
+      level: level,
+    );
+  }
+
+  @override
+  List<LevelModel> get allLevels => firebaseFirestoreService.allLevels;
+
+  @override
+  Future<List<LevelModel>> getLevels() {
+    return firebaseFirestoreService.getLevels();
+  }
 }
