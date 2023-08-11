@@ -8,7 +8,7 @@ class Enemy extends StatelessWidget {
   });
 
   final Color color;
-  final int? enemyIndex;
+  final List<int>? enemyIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,11 @@ class Enemy extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                enemyIndex.toString(),
+                enemyIndex!.join('|'),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 22,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

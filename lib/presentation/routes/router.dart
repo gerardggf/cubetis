@@ -1,4 +1,5 @@
 import 'package:cubetis/main.dart';
+import 'package:cubetis/presentation/modules/edit_level/edit_level_view.dart';
 import 'package:cubetis/presentation/modules/levels/levels_view.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_view.dart';
 import 'package:cubetis/presentation/modules/offline/offline_view.dart';
@@ -25,6 +26,16 @@ mixin RouterMixin on State<MyApp> {
         name: Routes.newLevel,
         path: '/new-level',
         builder: (_, __) => const NewLevelView(),
+      ),
+      GoRoute(
+        name: Routes.editLevel,
+        path: '/edit-level/:id',
+        builder: (_, state) {
+          final level = state.pathParameters['id'] ?? '';
+          return EditLevelView(
+            levelId: int.tryParse(level) ?? 0,
+          );
+        },
       ),
       GoRoute(
         name: Routes.offline,

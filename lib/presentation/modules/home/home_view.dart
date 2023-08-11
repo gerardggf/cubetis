@@ -51,6 +51,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
           icon: const Icon(Icons.menu),
         ),
         actions: [
+          if (controller.level != null)
+            IconButton(
+              onPressed: () {
+                context.pushNamed(
+                  Routes.editLevel,
+                  pathParameters: {
+                    "id": controller.level!.id.toString(),
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
+            ),
           IconButton(
             onPressed: () {
               context.pushNamed(Routes.newLevel);

@@ -5,12 +5,13 @@ import 'package:cubetis/presentation/objects/enemy.dart';
 import 'package:cubetis/presentation/objects/finish.dart';
 import 'package:cubetis/presentation/objects/player.dart';
 import 'package:cubetis/presentation/objects/wall.dart';
-import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewLevelWidget extends ConsumerStatefulWidget {
-  const NewLevelWidget({
+import 'edit_level_controller.dart';
+
+class EditLevelWidget extends ConsumerStatefulWidget {
+  const EditLevelWidget({
     super.key,
     required this.canvasSize,
   });
@@ -18,21 +19,20 @@ class NewLevelWidget extends ConsumerStatefulWidget {
   final Size? canvasSize;
 
   @override
-  ConsumerState<NewLevelWidget> createState() => _NewLevelWidgetState();
+  ConsumerState<EditLevelWidget> createState() => _EditLevelWidgetState();
 }
 
-class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
+class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
   final int numCells = GameParams.columns * GameParams.rows;
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(newLevelControllerProvider);
-    final notifier = ref.watch(newLevelControllerProvider.notifier);
+    final controller = ref.watch(editLevelControllerProvider);
+    final notifier = ref.watch(editLevelControllerProvider.notifier);
 
     final double objectButtonSize = widget.canvasSize == null
         ? 0
         : widget.canvasSize!.width / GameParams.columns;
-
     return Column(
       children: [
         Container(
