@@ -66,13 +66,14 @@ class HomeController extends StateNotifier<HomeState> {
     if (state.enemiesPos.contains(newPos) ||
         state.enemiesPos.contains(state.playerPos)) {
       _hitByEnemy();
+      newPos = state.level!.playerPos;
     }
 
     //finish level
     if (state.level!.finishPos == newPos &&
         state.points.length == state.level!.coinsPos.length) {
       loadLevel(state.level!.id + 1);
-      clearPoints();
+      newPos = state.level!.playerPos;
       if (kDebugMode) {
         print('Nivel ${state.level!.id + 1}');
       }
@@ -95,10 +96,13 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   Future<void> loadLevel(int levelId) async {
+    if (levelId + 1 > levelsRepository.allLevels.length) return;
     final level = levelsRepository.allLevels[levelId];
-    state = state.copyWith(playerPos: level.playerPos);
+
     state = state.copyWith(level: level);
     _updateCurrentEnemies();
+    clearPoints();
+    state = state.copyWith(playerPos: level.playerPos);
   }
 
   //points -------------------------------
@@ -117,7 +121,6 @@ class HomeController extends StateNotifier<HomeState> {
   void _hitByEnemy() {
     updatePlayerLives(state.lives - 1);
     loadLevel(state.level!.id);
-    clearPoints();
   }
 
   //-----------------------------------------

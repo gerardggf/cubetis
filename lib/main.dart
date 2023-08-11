@@ -45,7 +45,9 @@ class _MyAppState extends ConsumerState<MyApp> with RouterMixin {
   @override
   void initState() {
     super.initState();
-    ref.read(levelsRepositoryProvider).getLevels();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(levelsRepositoryProvider).getLevels();
+    });
   }
 
   @override

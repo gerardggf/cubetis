@@ -25,9 +25,7 @@ class FirebaseFirestoreService {
   Future<bool> createLevel(LevelModel level) async {
     try {
       final collection = firestore.collection('levels');
-      DocumentReference docRef = collection.doc(
-        level.id.toString(),
-      );
+      DocumentReference docRef = collection.doc();
       await docRef.set(
         level.toJson(),
       );

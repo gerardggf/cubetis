@@ -26,7 +26,6 @@ class LevelsView extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10),
               onTap: () async {
                 final homeNotifier = ref.read(homeControllerProvider.notifier);
-                homeNotifier.clearPoints();
                 await homeNotifier.loadLevel(index);
                 if (!context.mounted) return;
                 context.pop();

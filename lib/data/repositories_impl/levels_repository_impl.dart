@@ -2,6 +2,8 @@ import 'package:cubetis/data/services/firebase_firestore_service.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 
+import '../niveles.dart';
+
 class LevelsRepositoryImpl implements LevelsRepository {
   LevelsRepositoryImpl(this.firebaseFirestoreService);
 
@@ -9,6 +11,22 @@ class LevelsRepositoryImpl implements LevelsRepository {
 
   @override
   Future<bool> createLevel(LevelModel level) {
+    final nivelImportado = d00ifinal;
+    level = LevelModel(
+      id: 30,
+      name: 'd00i30',
+      coinsPos: nivelImportado["monedas"],
+      enemies: [
+        EnemyModel(id: 0, enemiesPos: nivelImportado["enemigo"], speed: 1),
+        if (nivelImportado["enemigo2"] != null &&
+            (nivelImportado["enemigo2"] as List<dynamic>).isNotEmpty)
+          EnemyModel(id: 1, enemiesPos: nivelImportado["enemigo2"], speed: 1),
+      ],
+      finishPos: nivelImportado["meta"],
+      playerPos: 111, //((GameParams.rows) * (GameParams.columns - 2)) + 1,
+      wallsPos: nivelImportado["barreras"],
+      creationDate: DateTime.now().toString(),
+    );
     return firebaseFirestoreService.createLevel(level);
   }
 
