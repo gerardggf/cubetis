@@ -18,7 +18,7 @@ class Enemy extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             //color: color,
-
+            border: enemyIndex != null ? Border.all(width: 1) : null,
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

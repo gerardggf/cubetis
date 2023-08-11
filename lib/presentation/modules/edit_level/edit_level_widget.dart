@@ -277,14 +277,32 @@ class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
                           ),
                           Expanded(
                             flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            child: ListView(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
                               children: [
-                                for (var i in controller.enemiesPos)
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      i.id.toString(),
+                                for (int i = 0;
+                                    i < controller.enemiesPos.length;
+                                    i++)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 2,
+                                    ),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            notifier.selectedEnemy == i
+                                                ? Colors.blue
+                                                : null,
+                                      ),
+                                      onPressed: () {
+                                        notifier.selectedEnemy = i;
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        controller.enemiesPos[i].id.toString(),
+                                      ),
                                     ),
                                   ),
                               ],
@@ -296,13 +314,37 @@ class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
                     Expanded(
                       child: Column(
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add),
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                notifier.addEnemy();
+                                setState(() {
+                                  notifier.selectedEnemy =
+                                      controller.enemiesPos.length;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                size: 30,
+                              ),
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.delete),
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                if (controller.enemiesPos.length - 1 == 0) {
+                                  return;
+                                }
+                                notifier.deleteLastEnemy();
+                                setState(() {
+                                  notifier.selectedEnemy = 0;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                size: 30,
+                              ),
+                            ),
                           ),
                         ],
                       ),

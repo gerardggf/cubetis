@@ -20,7 +20,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
 
   final LevelsRepository levelsRepository;
 
-  int enemiesCounter = 0;
+  int selectedEnemy = 0;
 
   void updateObjectTypeSelector(int value) {
     state = state.copyWith(objectTypeSelector: value);
@@ -37,23 +37,59 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   void newEnemiesPos(int enemy) {
     final enemyPosCopy = () {
       if (state.enemiesPos.isNotEmpty) {
-        if (state.enemiesPos.first.enemiesPos.contains(enemy)) {
-          return List<int>.from(state.enemiesPos.first.enemiesPos)
+        if (state.enemiesPos[selectedEnemy].enemiesPos.contains(enemy)) {
+          return List<int>.from(state.enemiesPos[selectedEnemy].enemiesPos)
             ..remove(enemy);
         }
 
-        return List<int>.from(state.enemiesPos.first.enemiesPos)..add(enemy);
+        return List<int>.from(state.enemiesPos[selectedEnemy].enemiesPos)
+          ..add(enemy);
       } else {
         return [enemy];
       }
     }();
-    final enemiesCopy = [
+    List<EnemyModel> enemiesCopy = List.generate(
+      state.enemiesPos.length,
+      (index) => state.enemiesPos[index],
+    );
+    enemiesCopy.removeAt(selectedEnemy);
+    enemiesCopy.insert(
+      selectedEnemy,
       EnemyModel(
-        id: 0,
+        id: selectedEnemy,
         enemiesPos: enemyPosCopy,
         speed: 1,
       ),
-    ];
+    );
+    print(enemiesCopy.map((e) => e.enemiesPos));
+    state = state.copyWith(enemiesPos: enemiesCopy);
+  }
+
+  void addEnemy() {
+    if (state.enemiesPos.length > 10) {
+      return;
+    }
+    final enemiesCopy = List.generate(
+      state.enemiesPos.length,
+      (index) => state.enemiesPos[index],
+    );
+
+    enemiesCopy.add(
+      EnemyModel(
+        id: state.enemiesPos.length,
+        enemiesPos: [],
+        speed: 1,
+      ),
+    );
+    state = state.copyWith(enemiesPos: enemiesCopy);
+  }
+
+  void deleteLastEnemy() {
+    final enemiesCopy = List.generate(
+      state.enemiesPos.length,
+      (index) => state.enemiesPos[index],
+    );
+    enemiesCopy.removeLast();
     state = state.copyWith(enemiesPos: enemiesCopy);
   }
 
