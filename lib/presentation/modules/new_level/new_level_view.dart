@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_widget.dart';
+import 'package:cubetis/presentation/utils/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class NewLevelView extends ConsumerStatefulWidget {
   const NewLevelView({super.key});
@@ -51,8 +53,21 @@ class _NewLevelViewState extends ConsumerState<NewLevelView> {
             ),
           ),
           IconButton(
-            onPressed: () {
-              notifier.uploadLevel();
+            onPressed: () async {
+              final result = await notifier.uploadLevel();
+              if (!mounted) return;
+              if (result) {
+                showCustomSnackBar(
+                    context: context,
+                    text: 'Se ha subido el nuevo nivel correctamente');
+                context.pop();
+              } else {
+                showCustomSnackBar(
+                  context: context,
+                  text: 'Se ha producido un error al subir el nuevo nivel',
+                  color: Colors.red,
+                );
+              }
             },
             icon: const Icon(
               Icons.save,

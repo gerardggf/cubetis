@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../domain/repositories/preferences_repository.dart';
+
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
@@ -35,7 +37,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Nivel ${controller.level?.id ?? '0'}',
+          'Nivel ${controller.level?.id ?? ref.read(preferencesRepositoryProvider).level}',
           style: const TextStyle(
             color: Colors.black,
           ),

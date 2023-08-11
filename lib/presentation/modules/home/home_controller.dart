@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/state/home_state.dart';
 import 'package:cubetis/const/const.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ final homeControllerProvider = StateNotifierProvider<HomeController, HomeState>(
   (ref) => HomeController(
     HomeState(),
     ref.read(levelsRepositoryProvider),
+    ref.read(preferencesRepositoryProvider),
   ),
 );
 
@@ -18,9 +20,11 @@ class HomeController extends StateNotifier<HomeState> {
   HomeController(
     super.state,
     this.levelsRepository,
+    this.preferencesRepository,
   );
 
   final LevelsRepository levelsRepository;
+  final PreferencesRepository preferencesRepository;
 
   Timer? timer;
 
@@ -97,6 +101,8 @@ class HomeController extends StateNotifier<HomeState> {
 
   Future<void> loadLevel(int levelId) async {
     if (levelId + 1 > levelsRepository.allLevels.length) return;
+    await preferencesRepository.setLevel(levelId);
+
     final level = levelsRepository.allLevels[levelId];
 
     state = state.copyWith(level: level);

@@ -1,4 +1,5 @@
 import 'package:cubetis/const/const.dart';
+import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
 import 'package:cubetis/presentation/objects/coin.dart';
 import 'package:cubetis/presentation/objects/empty.dart';
@@ -61,7 +62,8 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                         right: 0,
                         child: TextButton(
                           onPressed: () async {
-                            await notifier.loadLevel(0);
+                            await notifier.loadLevel(
+                                ref.read(preferencesRepositoryProvider).level);
                             notifier.startGame();
                           },
                           child: const Text(

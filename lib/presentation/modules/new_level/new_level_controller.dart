@@ -76,8 +76,8 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     state = state.copyWith(coinsPos: coinsCopy);
   }
 
-  void uploadLevel() {
-    levelsRepository.createLevel(
+  Future<bool> uploadLevel() async {
+    final result = await levelsRepository.createLevel(
       LevelModel(
         id: levelsRepository.allLevels.length,
         name: state.name,
@@ -89,6 +89,10 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         creationDate: DateTime.now().toString(),
       ),
     );
+    if (result) {
+      levelsRepository.getLevels();
+    }
+    return result;
   }
 
   void clearAll() {
