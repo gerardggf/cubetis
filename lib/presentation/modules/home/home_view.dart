@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cubetis/presentation/modules/home/game_widget.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
+import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
 import 'package:cubetis/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +38,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Nivel ${controller.level?.id ?? ref.read(preferencesRepositoryProvider).level}',
+          'Nivel ${controller.level?.level ?? ref.read(preferencesRepositoryProvider).level}',
           style: const TextStyle(
             color: Colors.black,
           ),
@@ -50,32 +51,34 @@ class _HomeViewState extends ConsumerState<HomeView> {
           },
           icon: const Icon(Icons.menu),
         ),
-        actions: [
-          if (controller.level != null)
-            IconButton(
-              onPressed: () {
-                context.pushNamed(
-                  Routes.editLevel,
-                  pathParameters: {
-                    "id": controller.level!.id.toString(),
+        actions: !ref.watch(levelsControllerProvider).isAdmin
+            ? []
+            : [
+                if (controller.level != null)
+                  IconButton(
+                    onPressed: () {
+                      context.pushNamed(
+                        Routes.editLevel,
+                        pathParameters: {
+                          "id": controller.level!.level.toString(),
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                  ),
+                IconButton(
+                  onPressed: () {
+                    context.pushNamed(Routes.newLevel);
                   },
-                );
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.black,
-              ),
-            ),
-          IconButton(
-            onPressed: () {
-              context.pushNamed(Routes.newLevel);
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.black,
-            ),
-          ),
-        ],
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
       ),
       body: canvasSize == null
           ? const Center(

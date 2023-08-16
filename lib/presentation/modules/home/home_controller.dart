@@ -76,10 +76,10 @@ class HomeController extends StateNotifier<HomeState> {
     //finish level
     if (state.level!.finishPos == newPos &&
         state.points.length == state.level!.coinsPos.length) {
-      loadLevel(state.level!.id + 1);
+      loadLevel(state.level!.level + 1);
       newPos = state.level!.playerPos;
       if (kDebugMode) {
-        print('Nivel ${state.level!.id + 1}');
+        print('Nivel ${state.level!.level + 1}');
       }
     }
 
@@ -100,15 +100,30 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   Future<void> loadLevel(int levelId) async {
-    if (levelId + 1 > levelsRepository.allLevels.length) return;
-    await preferencesRepository.setLevel(levelId);
+    if (!levelsRepository.allLevels
+        .map((e) => e.level)
+        .toList()
+        .contains(levelId)) {
+      try {
+        levelId = levelsRepository.allLevels.map((e) => e.level).firstWhere(
+              (element) => element > levelId,
+            );
+      } catch (e) {
+        levelId = levelsRepository.allLevels.first.level;
+      }
+    }
 
-    final level = levelsRepository.allLevels[levelId];
+    final level = levelsRepository.allLevels.firstWhere(
+      (e) => e.level == levelId,
+    );
+    await preferencesRepository.setLevel(levelId);
 
     state = state.copyWith(level: level);
     _updateCurrentEnemies();
     clearPoints();
     state = state.copyWith(playerPos: level.playerPos);
+    // print(preferencesRepository.level);
+    // print(state.level!.id);
   }
 
   //points -------------------------------
@@ -126,7 +141,12 @@ class HomeController extends StateNotifier<HomeState> {
 
   void _hitByEnemy() {
     updatePlayerLives(state.lives - 1);
-    loadLevel(state.level!.id);
+    if (state.lives <= 0) {
+      loadLevel(0);
+      updatePlayerLives(GameParams.lives);
+      return;
+    }
+    loadLevel(state.level!.level);
   }
 
   //-----------------------------------------
@@ -157,7 +177,9 @@ class HomeController extends StateNotifier<HomeState> {
           if (indexCounters[i] >= enemiesPos[i].length) {
             indexCounters[i] = 0;
           }
-          currentEnemiesPos[i] = enemiesPos[i][indexCounters[i]];
+          if (enemiesPos.first.isNotEmpty) {
+            currentEnemiesPos[i] = enemiesPos[i][indexCounters[i]];
+          }
         }
 
         updateEnemiesPos(currentEnemiesPos);

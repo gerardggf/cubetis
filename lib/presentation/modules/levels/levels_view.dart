@@ -1,5 +1,9 @@
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
+import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
+import 'package:cubetis/presentation/routes/routes.dart';
+import 'package:cubetis/presentation/utils/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,24 +13,58 @@ class LevelsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(levelsControllerProvider);
+    final notifier = ref.watch(levelsControllerProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text('All levels'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              notifier.updateIsAdmin(!controller.isAdmin);
+            },
+            icon: Icon(
+              Icons.key,
+              color: controller.isAdmin ? Colors.black : Colors.grey,
+            ),
+          ),
+        ],
       ),
       body: GridView.builder(
           physics: const BouncingScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
           ),
-          itemCount: ref.watch(levelsRepositoryProvider).allLevels.length,
+          itemCount: !controller.isAdmin
+              ? ref.watch(preferencesRepositoryProvider).level + 1
+              : ref.watch(levelsRepositoryProvider).allLevels.length,
           itemBuilder: (_, index) {
             final allLevels = ref.watch(levelsRepositoryProvider).allLevels;
 
-            return InkWell(
-              borderRadius: BorderRadius.circular(10),
+            return GestureDetector(
+              onLongPress: !controller.isAdmin
+                  ? null
+                  : () {
+                      showCustomWarningDialog(
+                        context: context,
+                        title: 'Eliminar nivel ${allLevels[index].level}',
+                        content:
+                            '¿Estás seguro/a que quieres eliminar el nivel ${allLevels[index].level}?',
+                        onPressedConfirm: () async {
+                          await ref.read(levelsRepositoryProvider).deleteLevel(
+                                allLevels[index].id,
+                              );
+                          await ref.read(levelsRepositoryProvider).getLevels();
+                          if (context.mounted) {
+                            context.goNamed(Routes.home);
+                          }
+                        },
+                      );
+                    },
               onTap: () async {
                 final homeNotifier = ref.read(homeControllerProvider.notifier);
-                await homeNotifier.loadLevel(index);
+
+                await homeNotifier.loadLevel(allLevels[index].level);
                 if (!context.mounted) return;
                 context.pop();
               },
@@ -41,7 +79,7 @@ class LevelsView extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Nivel ${allLevels[index].id}'),
+                    Text('Nivel ${allLevels[index].level}'),
                     Text(
                       allLevels[index].name,
                       style: const TextStyle(

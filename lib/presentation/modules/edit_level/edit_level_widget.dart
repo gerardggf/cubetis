@@ -332,9 +332,6 @@ class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
                           Expanded(
                             child: IconButton(
                               onPressed: () {
-                                if (controller.enemiesPos.length - 1 == 0) {
-                                  return;
-                                }
                                 notifier.deleteLastEnemy();
                                 setState(() {
                                   notifier.selectedEnemy = 0;

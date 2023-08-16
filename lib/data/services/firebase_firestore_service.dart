@@ -26,8 +26,9 @@ class FirebaseFirestoreService {
     try {
       final collection = firestore.collection('levels');
       DocumentReference docRef = collection.doc();
+      final levelWithId = level.copyWith(id: docRef.id);
       await docRef.set(
-        level.toJson(),
+        levelWithId.toJson(),
       );
       return true;
     } catch (e) {
@@ -41,7 +42,7 @@ class FirebaseFirestoreService {
   Stream<List<LevelModel>> subscribeToLevels() async* {
     final collection = firestore.collection('levels');
 
-    final levels = collection.orderBy('id').snapshots().map(
+    final levels = collection.orderBy('level').snapshots().map(
           (snapshot) => snapshot.docs
               .map(
                 (doc) => LevelModel.fromJson(doc.data()),
@@ -54,7 +55,7 @@ class FirebaseFirestoreService {
   Future<List<LevelModel>> getLevels() async {
     final collection = firestore.collection('levels');
 
-    final levelsNotMapped = await collection.orderBy('id').get();
+    final levelsNotMapped = await collection.orderBy('level').get();
 
     final levels = levelsNotMapped.docs
         .map(
@@ -86,10 +87,10 @@ class FirebaseFirestoreService {
     }
   }
 
-  Future<bool> deleteLevel(String id) async {
+  Future<bool> deleteLevel(String levelId) async {
     try {
       final collection = firestore.collection('levels');
-      DocumentReference docRef = collection.doc(id);
+      DocumentReference docRef = collection.doc(levelId);
       await docRef.delete();
       return true;
     } catch (e) {

@@ -61,7 +61,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
         speed: 1,
       ),
     );
-    print(enemiesCopy.map((e) => e.enemiesPos));
+    //print(enemiesCopy.map((e) => e.enemiesPos));
     state = state.copyWith(enemiesPos: enemiesCopy);
   }
 
@@ -89,6 +89,10 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       state.enemiesPos.length,
       (index) => state.enemiesPos[index],
     );
+    if (state.enemiesPos.length - 1 == 0) {
+      enemiesCopy.first.enemiesPos.clear();
+      return;
+    }
     enemiesCopy.removeLast();
     state = state.copyWith(enemiesPos: enemiesCopy);
   }
@@ -113,10 +117,14 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     state = state.copyWith(coinsPos: coinsCopy);
   }
 
-  Future<bool> updateLevel() async {
-    final result = await levelsRepository.createLevel(
-      LevelModel(
-        id: levelsRepository.allLevels.length,
+  Future<bool> updateLevel(int levelId) async {
+    final docId =
+        levelsRepository.allLevels.where((e) => e.level == levelId).first.id;
+    final result = await levelsRepository.updateLevel(
+      id: docId,
+      level: LevelModel(
+        id: docId,
+        level: levelId,
         name: state.name,
         coinsPos: state.coinsPos,
         enemies: state.enemiesPos,

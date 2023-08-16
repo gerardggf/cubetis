@@ -6,6 +6,7 @@ part 'levels_state.freezed.dart';
 class LevelsState with _$LevelsState {
   factory LevelsState({
     @Default(false) bool isPlaying,
+    @Default(false) bool isAdmin,
     @Default(0) int points,
   }) = _LevelsState;
 }

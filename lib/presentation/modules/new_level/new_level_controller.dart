@@ -60,7 +60,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         speed: 1,
       ),
     );
-    print(enemiesCopy.map((e) => e.enemiesPos));
+    //print(enemiesCopy.map((e) => e.enemiesPos));
     state = state.copyWith(enemiesPos: enemiesCopy);
   }
 
@@ -88,6 +88,10 @@ class NewLevelController extends StateNotifier<NewLevelState> {
       state.enemiesPos.length,
       (index) => state.enemiesPos[index],
     );
+    if (state.enemiesPos.length - 1 == 0) {
+      enemiesCopy.first.enemiesPos.clear();
+      return;
+    }
     enemiesCopy.removeLast();
     state = state.copyWith(enemiesPos: enemiesCopy);
   }
@@ -113,12 +117,15 @@ class NewLevelController extends StateNotifier<NewLevelState> {
   }
 
   Future<bool> uploadLevel() async {
+    final enemies =
+        state.enemiesPos.where((e) => e.enemiesPos.isNotEmpty).toList();
     final result = await levelsRepository.createLevel(
       LevelModel(
-        id: levelsRepository.allLevels.length,
+        id: '',
+        level: levelsRepository.allLevels.length,
         name: state.name,
         coinsPos: state.coinsPos,
-        enemies: state.enemiesPos,
+        enemies: enemies,
         finishPos: state.finishPos,
         playerPos: state.playerPos,
         wallsPos: state.wallsPos,

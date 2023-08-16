@@ -1,16 +1,17 @@
 class LevelModel {
-  final int id;
+  final String id;
+  final int level;
   final String name;
   final List<int> coinsPos;
   final List<EnemyModel> enemies;
   final int finishPos;
   final int playerPos;
-
   final List<int> wallsPos;
   final String creationDate;
 
   LevelModel({
     required this.id,
+    required this.level,
     required this.name,
     required this.coinsPos,
     required this.enemies,
@@ -21,7 +22,8 @@ class LevelModel {
   });
 
   LevelModel copyWith({
-    int? id,
+    String? id,
+    int? level,
     String? name,
     List<int>? coinsPos,
     List<EnemyModel>? enemies,
@@ -32,6 +34,7 @@ class LevelModel {
   }) =>
       LevelModel(
         id: id ?? this.id,
+        level: level ?? this.level,
         name: name ?? this.name,
         coinsPos: coinsPos ?? this.coinsPos,
         enemies: enemies ?? this.enemies,
@@ -43,6 +46,7 @@ class LevelModel {
 
   factory LevelModel.fromJson(Map<String, dynamic> json) => LevelModel(
         id: json["id"],
+        level: json["level"],
         name: json["name"],
         coinsPos: List<int>.from(json["coinsPos"].map((x) => x)),
         enemies: List<EnemyModel>.from(
@@ -55,6 +59,7 @@ class LevelModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "level": level,
         "name": name,
         "coinsPos": List<dynamic>.from(coinsPos.map((x) => x)),
         "enemies": List<dynamic>.from(enemies.map((x) => x.toJson())),

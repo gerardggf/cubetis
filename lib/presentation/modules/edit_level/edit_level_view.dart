@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_controller.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_widget.dart';
 import 'package:cubetis/presentation/utils/custom_snack_bar.dart';
+import 'package:cubetis/presentation/utils/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,7 +54,15 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
         actions: [
           IconButton(
             onPressed: () {
-              notifier.clearAll();
+              showCustomWarningDialog(
+                context: context,
+                title: 'Eliminar todos los objetos',
+                content: '¿Quieres eliminar todos los objetos del nivel?',
+                onPressedConfirm: () {
+                  context.pop();
+                  notifier.clearAll();
+                },
+              );
             },
             icon: const Icon(
               Icons.delete,
@@ -62,7 +71,7 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
           ),
           IconButton(
             onPressed: () async {
-              final result = await notifier.updateLevel();
+              final result = await notifier.updateLevel(widget.levelId);
               if (!mounted) return;
               if (result) {
                 showCustomSnackBar(
