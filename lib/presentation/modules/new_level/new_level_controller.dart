@@ -107,6 +107,9 @@ class NewLevelController extends StateNotifier<NewLevelState> {
   }
 
   void newCoinsPos(int coin) {
+    if (state.wallsPos.contains(coin)) {
+      return;
+    }
     final coinsCopy = () {
       if (state.coinsPos.contains(coin)) {
         return List<int>.from(state.coinsPos)..remove(coin);
@@ -116,9 +119,17 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     state = state.copyWith(coinsPos: coinsCopy);
   }
 
+  void updateFetching(bool value) {
+    state = state.copyWith(fetching: value);
+  }
+
   Future<bool> uploadLevel() async {
-    final enemies =
-        state.enemiesPos.where((e) => e.enemiesPos.isNotEmpty).toList();
+    updateFetching(true);
+    final enemies = state.enemiesPos
+        .where(
+          (e) => e.enemiesPos.isNotEmpty,
+        )
+        .toList();
     final result = await levelsRepository.createLevel(
       LevelModel(
         id: '',
@@ -135,6 +146,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     if (result) {
       levelsRepository.getLevels();
     }
+    updateFetching(false);
     return result;
   }
 

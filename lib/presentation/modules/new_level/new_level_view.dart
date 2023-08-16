@@ -30,59 +30,68 @@ class _NewLevelViewState extends ConsumerState<NewLevelView> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(newLevelControllerProvider);
     final notifier = ref.watch(newLevelControllerProvider.notifier);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'New level',
-          style: TextStyle(
-            color: Colors.black,
+    return AbsorbPointer(
+      absorbing: controller.fetching,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'New level',
+            style: TextStyle(
+              color: Colors.black,
+            ),
           ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                notifier.clearAll();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.black,
+              ),
+            ),
+            if (controller.fetching)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (!controller.fetching)
+              IconButton(
+                onPressed: () async {
+                  final result = await notifier.uploadLevel();
+                  if (!mounted) return;
+                  if (result) {
+                    showCustomSnackBar(
+                        context: context,
+                        text: 'Se ha subido el nuevo nivel correctamente');
+                    context.pop();
+                  } else {
+                    showCustomSnackBar(
+                      context: context,
+                      text: 'Se ha producido un error al subir el nuevo nivel',
+                      color: Colors.red,
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.black,
+                ),
+              ),
+          ],
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              notifier.clearAll();
-            },
-            icon: const Icon(
-              Icons.delete,
-              color: Colors.black,
-            ),
-          ),
-          IconButton(
-            onPressed: () async {
-              final result = await notifier.uploadLevel();
-              if (!mounted) return;
-              if (result) {
-                showCustomSnackBar(
-                    context: context,
-                    text: 'Se ha subido el nuevo nivel correctamente');
-                context.pop();
-              } else {
-                showCustomSnackBar(
-                  context: context,
-                  text: 'Se ha producido un error al subir el nuevo nivel',
-                  color: Colors.red,
-                );
-              }
-            },
-            icon: const Icon(
-              Icons.save,
-              color: Colors.black,
-            ),
-          ),
-        ],
+        body: canvasSize == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : NewLevelWidget(
+                canvasSize: canvasSize,
+              ),
       ),
-      body: canvasSize == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : NewLevelWidget(
-              canvasSize: canvasSize,
-            ),
     );
   }
 }

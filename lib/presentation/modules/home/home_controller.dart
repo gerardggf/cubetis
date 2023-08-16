@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/state/home_state.dart';
 import 'package:cubetis/const/const.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -78,9 +76,6 @@ class HomeController extends StateNotifier<HomeState> {
         state.points.length == state.level!.coinsPos.length) {
       loadLevel(state.level!.level + 1);
       newPos = state.level!.playerPos;
-      if (kDebugMode) {
-        print('Nivel ${state.level!.level + 1}');
-      }
     }
 
     //update player pos

@@ -108,6 +108,9 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   }
 
   void newCoinsPos(int coin) {
+    if (state.wallsPos.contains(coin)) {
+      return;
+    }
     final coinsCopy = () {
       if (state.coinsPos.contains(coin)) {
         return List<int>.from(state.coinsPos)..remove(coin);
@@ -117,9 +120,18 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     state = state.copyWith(coinsPos: coinsCopy);
   }
 
+  void updateFetching(bool value) {
+    state = state.copyWith(fetching: value);
+  }
+
   Future<bool> updateLevel(int levelId) async {
-    final docId =
-        levelsRepository.allLevels.where((e) => e.level == levelId).first.id;
+    updateFetching(true);
+    final docId = levelsRepository.allLevels
+        .where(
+          (e) => e.level == levelId,
+        )
+        .first
+        .id;
     final result = await levelsRepository.updateLevel(
       id: docId,
       level: LevelModel(
@@ -137,6 +149,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     if (result) {
       levelsRepository.getLevels();
     }
+    updateFetching(false);
     return result;
   }
 

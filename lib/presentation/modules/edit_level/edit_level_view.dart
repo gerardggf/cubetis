@@ -39,68 +39,78 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(editLevelControllerProvider);
+
     final notifier = ref.watch(editLevelControllerProvider.notifier);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Level ${widget.levelId}',
-          style: const TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              showCustomWarningDialog(
-                context: context,
-                title: 'Eliminar todos los objetos',
-                content: '¿Quieres eliminar todos los objetos del nivel?',
-                onPressedConfirm: () {
-                  context.pop();
-                  notifier.clearAll();
-                },
-              );
-            },
-            icon: const Icon(
-              Icons.delete,
+    return AbsorbPointer(
+      absorbing: controller.fetching,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'Level ${widget.levelId}',
+            style: const TextStyle(
               color: Colors.black,
             ),
           ),
-          IconButton(
-            onPressed: () async {
-              final result = await notifier.updateLevel(widget.levelId);
-              if (!mounted) return;
-              if (result) {
-                showCustomSnackBar(
-                    context: context,
-                    text: 'Se ha actualizado el nivel ${widget.levelId}');
-                context.pop();
-              } else {
-                showCustomSnackBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                showCustomWarningDialog(
                   context: context,
-                  text:
-                      'Se ha producido un error al actualizar el nivel ${widget.levelId}',
-                  color: Colors.red,
+                  title: 'Eliminar todos los objetos',
+                  content: '¿Quieres eliminar todos los objetos del nivel?',
+                  onPressedConfirm: () {
+                    context.pop();
+                    notifier.clearAll();
+                  },
                 );
-              }
-            },
-            icon: const Icon(
-              Icons.save,
-              color: Colors.black,
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.black,
+              ),
             ),
-          ),
-        ],
+            if (controller.fetching)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (!controller.fetching)
+              IconButton(
+                onPressed: () async {
+                  final result = await notifier.updateLevel(widget.levelId);
+                  if (!mounted) return;
+                  if (result) {
+                    showCustomSnackBar(
+                        context: context,
+                        text: 'Se ha actualizado el nivel ${widget.levelId}');
+                    context.pop();
+                  } else {
+                    showCustomSnackBar(
+                      context: context,
+                      text:
+                          'Se ha producido un error al actualizar el nivel ${widget.levelId}',
+                      color: Colors.red,
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.black,
+                ),
+              ),
+          ],
+        ),
+        body: canvasSize == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : EditLevelWidget(
+                canvasSize: canvasSize,
+              ),
       ),
-      body: canvasSize == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : EditLevelWidget(
-              canvasSize: canvasSize,
-            ),
     );
   }
 }
