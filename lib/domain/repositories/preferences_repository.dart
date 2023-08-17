@@ -11,4 +11,6 @@ final preferencesRepositoryProvider = Provider<PreferencesRepository>(
 abstract class PreferencesRepository {
   Future<void> setLevel(int level);
   int get level;
+  Future<void> setMaxLevel(int maxLevel);
+  int get maxLevel;
 }

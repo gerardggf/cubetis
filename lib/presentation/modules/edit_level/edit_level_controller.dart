@@ -20,6 +20,8 @@ class EditLevelController extends StateNotifier<EditLevelState> {
 
   final LevelsRepository levelsRepository;
 
+  LevelModel? editingLevel;
+
   int selectedEnemy = 0;
 
   void updateObjectTypeSelector(int value) {
@@ -137,6 +139,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       level: LevelModel(
         id: docId,
         level: levelId,
+        difficulty: editingLevel!.difficulty,
         name: state.name,
         coinsPos: state.coinsPos,
         enemies: state.enemiesPos,
@@ -162,13 +165,14 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   }
 
   Future<void> loadLevelToUpdate(int level) async {
-    final editLevel = levelsRepository.allLevels[level];
+    editingLevel = levelsRepository.allLevels[level];
+    if (editingLevel == null) return;
     state = state.copyWith(
-      coinsPos: editLevel.coinsPos,
-      enemiesPos: editLevel.enemies,
-      wallsPos: editLevel.wallsPos,
-      playerPos: editLevel.playerPos,
-      finishPos: editLevel.finishPos,
+      coinsPos: editingLevel!.coinsPos,
+      enemiesPos: editingLevel!.enemies,
+      wallsPos: editingLevel!.wallsPos,
+      playerPos: editingLevel!.playerPos,
+      finishPos: editingLevel!.finishPos,
     );
   }
 }

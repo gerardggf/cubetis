@@ -1,3 +1,4 @@
 enum Preferences {
   level,
+  maxLevel,
 }

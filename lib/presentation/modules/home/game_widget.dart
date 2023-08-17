@@ -114,6 +114,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                   ),
           ),
         ),
+        const SizedBox(height: 5),
         Expanded(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +141,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
               ),
               Expanded(
                 flex: 5,
-                child: _buildButtonControl(notifier),
+                child: _buildPadControl(), //_buildButtonControl(notifier),
               ),
               Expanded(
                 child: Column(
@@ -169,90 +170,210 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
     );
   }
 
-  Widget _buildButtonControl(HomeController notifier) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                  _buildButtonItem(
-                    direction: 0,
-                    iconData: Icons.arrow_drop_up,
-                  ),
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                ],
+  // Widget _buildButtonControl(HomeController notifier) => Padding(
+  //       padding: const EdgeInsets.symmetric(vertical: 10),
+  //       child: Column(
+  //         children: [
+  //           Expanded(
+  //             child: Row(
+  //               children: [
+  //                 const Expanded(
+  //                   child: SizedBox(),
+  //                 ),
+  //                 _buildButtonItem(
+  //                   direction: 0,
+  //                   iconData: Icons.arrow_drop_up,
+  //                 ),
+  //                 const Expanded(
+  //                   child: SizedBox(),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Expanded(
+  //             child: Row(
+  //               children: [
+  //                 _buildButtonItem(
+  //                   direction: 2,
+  //                   iconData: Icons.arrow_left,
+  //                 ),
+  //                 const Expanded(
+  //                   child: SizedBox(),
+  //                 ),
+  //                 _buildButtonItem(
+  //                   direction: 3,
+  //                   iconData: Icons.arrow_right,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Expanded(
+  //             child: Row(
+  //               children: [
+  //                 const Expanded(
+  //                   child: SizedBox(),
+  //                 ),
+  //                 _buildButtonItem(
+  //                   direction: 1,
+  //                   iconData: Icons.arrow_drop_down,
+  //                 ),
+  //                 const Expanded(
+  //                   child: SizedBox(),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+
+  // Widget _buildButtonItem({
+  //   required int direction,
+  //   required IconData iconData,
+  // }) {
+  //   return Expanded(
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         final notifier = ref.read(homeControllerProvider.notifier);
+  //         notifier.onButtonDown(
+  //           direction: direction,
+  //           canvasSize: widget.canvasSize,
+  //         );
+  //       },
+  //       child: Container(
+  //         width: double.infinity,
+  //         height: double.infinity,
+  //         decoration: BoxDecoration(
+  //           color: kColor,
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: Icon(
+  //           iconData,
+  //           size: kBtnSize,
+  //           color: Colors.white,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _buildPadControl() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GestureDetector(
+          onTapDown: (details) {
+            final notifier = ref.watch(homeControllerProvider.notifier);
+            notifier.onButtonDown(
+              direction: _sendPadInfo(
+                details,
+                Size(
+                  constraints.maxWidth,
+                  constraints.maxHeight,
+                ),
               ),
+              canvasSize: widget.canvasSize,
+            );
+          },
+          child: CustomPaint(
+            size: Size(constraints.maxWidth, constraints.maxHeight),
+            painter: XPainter(),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
+                      _buildArrowIcon(Icons.arrow_drop_up),
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      _buildArrowIcon(Icons.arrow_left),
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
+                      _buildArrowIcon(Icons.arrow_right),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
+                      _buildArrowIcon(Icons.arrow_drop_down),
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: Row(
-                children: [
-                  _buildButtonItem(
-                    direction: 2,
-                    iconData: Icons.arrow_left,
-                  ),
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                  _buildButtonItem(
-                    direction: 3,
-                    iconData: Icons.arrow_right,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                  _buildButtonItem(
-                    direction: 1,
-                    iconData: Icons.arrow_drop_down,
-                  ),
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildArrowIcon(IconData icon) => Expanded(
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Icon(
+            icon,
+            color: Colors.grey,
+          ),
         ),
       );
 
-  Widget _buildButtonItem({
-    required int direction,
-    required IconData iconData,
-  }) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          final notifier = ref.read(homeControllerProvider.notifier);
-          notifier.onButtonDown(
-            direction: direction,
-            canvasSize: widget.canvasSize,
-          );
-        },
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: kColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(
-            iconData,
-            size: kBtnSize,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
+  int _sendPadInfo(TapDownDetails details, Size size) {
+    final x = details.localPosition.dx;
+    final y = details.localPosition.dy;
+    // print('x: $x');
+    // print('y: $y');
+
+    final slope = size.height / size.width;
+    final aboveMainDiagonal = y < slope * x;
+    final aboveSecondaryDiagonal = y < -slope * x + size.height;
+
+    //derecha
+    if (aboveMainDiagonal && !aboveSecondaryDiagonal) {
+      return 3;
+      //arriba
+    } else if (aboveMainDiagonal && aboveSecondaryDiagonal) {
+      return 0;
+      //izquierda
+    } else if (!aboveMainDiagonal && aboveSecondaryDiagonal) {
+      return 2;
+      //abajo
+    } else if (!aboveMainDiagonal && !aboveSecondaryDiagonal) {
+      return 1;
+    }
+    return 0;
+  }
+}
+
+class XPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black12
+      ..strokeWidth = 1;
+
+    canvas.drawLine(const Offset(0, 0), Offset(size.width, size.height), paint);
+    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

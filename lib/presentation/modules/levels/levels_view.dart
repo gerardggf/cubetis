@@ -15,6 +15,7 @@ class LevelsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(levelsControllerProvider);
     final notifier = ref.watch(levelsControllerProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('All levels'),
@@ -33,10 +34,10 @@ class LevelsView extends ConsumerWidget {
       body: GridView.builder(
           physics: const BouncingScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
+            crossAxisCount: 4,
           ),
           itemCount: !controller.isAdmin
-              ? ref.watch(preferencesRepositoryProvider).level + 1
+              ? ref.watch(preferencesRepositoryProvider).maxLevel + 1
               : ref.watch(levelsRepositoryProvider).allLevels.length,
           itemBuilder: (_, index) {
             final allLevels = ref.watch(levelsRepositoryProvider).allLevels;
@@ -69,7 +70,7 @@ class LevelsView extends ConsumerWidget {
                 context.pop();
               },
               child: Container(
-                margin: const EdgeInsets.all(5),
+                margin: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
@@ -79,14 +80,44 @@ class LevelsView extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Nivel ${allLevels[index].level}'),
                     Text(
-                      allLevels[index].name,
+                      'Nivel ${allLevels[index].level}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Diff: ${allLevels[index].difficulty.toString()}',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
+                    // Text(
+                    //   allLevels[index].name,
+                    //   style: const TextStyle(
+                    //     fontSize: 12,
+                    //     color: Colors.grey,
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(3),
+                    //   child: GridView.builder(
+                    //     gridDelegate:
+                    //         const SliverGridDelegateWithFixedCrossAxisCount(
+                    //       crossAxisCount: GameParams.columns,
+                    //     ),
+                    //     shrinkWrap: true,
+                    //     physics: const BouncingScrollPhysics(),
+                    //     itemCount: numCells,
+                    //     itemBuilder: (BuildContext context, int cellIndex) {
+                    //       if (allLevels[index].wallsPos.contains(cellIndex)) {
+                    //         return const Wall();
+                    //       }
+                    //       return const Empty();
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

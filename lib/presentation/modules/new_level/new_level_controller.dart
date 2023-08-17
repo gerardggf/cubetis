@@ -134,6 +134,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
       LevelModel(
         id: '',
         level: levelsRepository.allLevels.length,
+        difficulty: 0,
         name: state.name,
         coinsPos: state.coinsPos,
         enemies: enemies,

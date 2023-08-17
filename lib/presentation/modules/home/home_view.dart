@@ -49,7 +49,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           onPressed: () {
             context.pushNamed(Routes.levels);
           },
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.dashboard_outlined),
         ),
         actions: !ref.watch(levelsControllerProvider).isAdmin
             ? []

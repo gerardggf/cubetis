@@ -74,6 +74,10 @@ class HomeController extends StateNotifier<HomeState> {
     //finish level
     if (state.level!.finishPos == newPos &&
         state.points.length == state.level!.coinsPos.length) {
+      if (state.level!.level == levelsRepository.allLevels.length - 1) {
+        updateIsPlaying(false);
+        return;
+      }
       loadLevel(state.level!.level + 1);
       newPos = state.level!.playerPos;
     }
@@ -139,6 +143,7 @@ class HomeController extends StateNotifier<HomeState> {
     if (state.lives <= 0) {
       loadLevel(0);
       updatePlayerLives(GameParams.lives);
+      preferencesRepository.setMaxLevel(0);
       return;
     }
     loadLevel(state.level!.level);

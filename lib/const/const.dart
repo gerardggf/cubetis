@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class GameParams {
   static const int rows = 13;
   static const int columns = 10;
-  static const int lives = 10;
+  static const int lives = 30;
 
 //tiempo movimiento enemigos
   static const enemyUpdateTime = 300;

@@ -14,8 +14,22 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   Future<void> setLevel(int level) async {
+    if (level >= maxLevel) {
+      setMaxLevel(level);
+    }
     await sharedPreferences.setInt(
       Preferences.level.name,
+      level,
+    );
+  }
+
+  @override
+  int get maxLevel => sharedPreferences.getInt(Preferences.maxLevel.name) ?? 0;
+
+  @override
+  Future<void> setMaxLevel(int maxLevel) async {
+    await sharedPreferences.setInt(
+      Preferences.maxLevel.name,
       level,
     );
   }
