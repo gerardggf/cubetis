@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_controller.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_widget.dart';
 import 'package:cubetis/presentation/utils/custom_snack_bar.dart';
-import 'package:cubetis/presentation/utils/show_warning_dialog.dart';
+import 'package:cubetis/presentation/utils/dialogs/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

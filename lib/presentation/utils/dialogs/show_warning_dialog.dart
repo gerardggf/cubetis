@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> showCustomWarningDialog({
   required BuildContext context,
@@ -21,7 +22,7 @@ Future<void> showCustomWarningDialog({
           TextButton(
             onPressed: onPressedCancel ??
                 () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
             child: const Text('Cancelar'),
           ),

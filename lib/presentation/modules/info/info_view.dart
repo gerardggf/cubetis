@@ -11,7 +11,7 @@ class InfoView extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             Container(
@@ -23,16 +23,14 @@ class InfoView extends StatelessWidget {
                     "¿En qué consiste Cubets?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   const Text(
                     "Ayuda a Cubets, un cuadrado naranja bastante apático, que se ha visto atrapado en un juego para teléfonos móviles. \n\nPara poder escapar tiene que superar todos los niveles, pasando los niveles mediante el portal de color blanco.",
-                  ),
-                  const SizedBox(
-                    height: 10,
                   ),
                   // Image.asset(
                   //   "assets/img/icono_cubets.png",
@@ -40,13 +38,13 @@ class InfoView extends StatelessWidget {
                   //   fit: BoxFit.cover,
                   // ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   const Text(
                     "Sin embargo, Cubets tiene que haber cogido todas las monedas de cada nivel para poder pasar por dicho portal.",
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   RichText(
                     text: const TextSpan(
@@ -55,6 +53,7 @@ class InfoView extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        height: 1.5,
                       ),
                       children: <TextSpan>[
                         TextSpan(
@@ -80,7 +79,7 @@ class InfoView extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
             const Column(
               children: [
@@ -88,16 +87,14 @@ class InfoView extends StatelessWidget {
                   "¿Cómo se juega?",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Text(
                   "Puedes controlar a tu jugador mediante los botones de la parte inferior de la pantalla o bien tocando la propia zona de juego tal y como se muestra a continuación.",
-                ),
-                SizedBox(
-                  height: 15,
                 ),
                 // Image.asset(
                 //   "assets/img/instruc_cubets.png",

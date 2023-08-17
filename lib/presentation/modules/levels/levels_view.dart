@@ -3,7 +3,9 @@ import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
 import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
 import 'package:cubetis/presentation/routes/routes.dart';
-import 'package:cubetis/presentation/utils/show_warning_dialog.dart';
+import 'package:cubetis/presentation/utils/custom_snack_bar.dart';
+import 'package:cubetis/presentation/utils/dialogs/show_password_dialog.dart';
+import 'package:cubetis/presentation/utils/dialogs/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,12 +32,43 @@ class LevelsView extends ConsumerWidget {
           ),
           const SizedBox(width: 5),
           IconButton(
-            onPressed: () {
-              notifier.updateIsAdmin(!controller.isAdmin);
+            onPressed: () async {
+              if (!controller.isAdmin) {
+                final result = await showPasswordDialog(
+                  context: context,
+                  title: 'Modo Administrador',
+                );
+                if (result.trim() != 'c1234') {
+                  if (context.mounted) {
+                    showCustomSnackBar(
+                      context: context,
+                      text: 'La contraseña es incorrecta',
+                      color: Colors.red,
+                    );
+                  }
+                  return;
+                }
+                notifier.updateIsAdmin(true);
+                if (context.mounted) {
+                  showCustomSnackBar(
+                    context: context,
+                    text: 'Modo administrador activado',
+                  );
+                }
+              } else {
+                notifier.updateIsAdmin(false);
+                if (context.mounted) {
+                  showCustomSnackBar(
+                    context: context,
+                    text: 'Modo administrador desactivado',
+                    color: Colors.orange,
+                  );
+                }
+              }
             },
             icon: Icon(
               Icons.key,
-              color: controller.isAdmin ? Colors.black : Colors.grey,
+              color: controller.isAdmin ? Colors.blue : Colors.grey,
             ),
           ),
         ],

@@ -12,6 +12,7 @@ class HomeState with _$HomeState {
     @Default([]) List<int> points,
     @Default(null) LevelModel? level,
     @Default(0) int playerPos,
+    @Default(0) int gameTimerInSeconds,
     @Default([]) List<int> enemiesPos,
     @Default(GameParams.lives) int lives,
   }) = _HomeState;

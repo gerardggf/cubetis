@@ -24,7 +24,7 @@ class HomeController extends StateNotifier<HomeState> {
   final LevelsRepository levelsRepository;
   final PreferencesRepository preferencesRepository;
 
-  Timer? timer;
+  Timer? gameTimer, enemiesTimer;
 
   void _updatePlayerPos(int newPos) {
     if (state.level == null) return;
@@ -98,6 +98,10 @@ class HomeController extends StateNotifier<HomeState> {
     state = state.copyWith(isPlaying: value);
   }
 
+  void updateGameTimer(int value) {
+    state = state.copyWith(gameTimerInSeconds: state.gameTimerInSeconds + 1);
+  }
+
   Future<void> loadLevel(int levelId) async {
     if (!levelsRepository.allLevels
         .map((e) => e.level)
@@ -143,6 +147,7 @@ class HomeController extends StateNotifier<HomeState> {
     if (state.lives <= 0) {
       loadLevel(0);
       updatePlayerLives(GameParams.lives);
+      updateGameTimer(0);
       preferencesRepository.setMaxLevel(0);
       return;
     }
@@ -154,10 +159,23 @@ class HomeController extends StateNotifier<HomeState> {
   void startGame() {
     if (state.level == null) return;
     updateIsPlaying(true);
+    gameTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (!state.isPlaying) return;
+        updateGameTimer(state.gameTimerInSeconds + 1);
+      },
+    );
+  }
+
+  void endGame() {
+    updateIsPlaying(false);
+    enemiesTimer?.cancel();
+    gameTimer?.cancel();
   }
 
   void _updateCurrentEnemies() {
-    timer?.cancel();
+    enemiesTimer?.cancel();
     updateEnemiesPos([]);
     final enemiesPos = state.level!.enemies
         .map(
@@ -169,7 +187,7 @@ class HomeController extends StateNotifier<HomeState> {
     List<int> currentEnemiesPos =
         List.generate(enemiesPos.length, (index) => 0);
 
-    timer = Timer.periodic(
+    enemiesTimer = Timer.periodic(
       const Duration(milliseconds: GameParams.enemyUpdateTime),
       (_) {
         for (var i = 0; i < enemiesPos.length; i++) {
@@ -189,11 +207,6 @@ class HomeController extends StateNotifier<HomeState> {
         }
       },
     );
-  }
-
-  void endGame() {
-    updateIsPlaying(false);
-    timer?.cancel();
   }
 
   void onScreenTapDown({

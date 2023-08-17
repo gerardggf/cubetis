@@ -7,6 +7,7 @@ import 'package:cubetis/presentation/objects/enemy.dart';
 import 'package:cubetis/presentation/objects/finish.dart';
 import 'package:cubetis/presentation/objects/player.dart';
 import 'package:cubetis/presentation/objects/wall.dart';
+import 'package:cubetis/presentation/utils/date_time_conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,6 +34,13 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
     return Column(
       children: [
         GestureDetector(
+          onLongPress: () {
+            if (controller.isPlaying) {
+              notifier.updateIsPlaying(false);
+              return;
+            }
+            notifier.updateIsPlaying(true);
+          },
           onTapDown: (details) {
             notifier.onScreenTapDown(
               details: details,
@@ -42,41 +50,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           child: Container(
             color: Colors.black,
             child: controller.level == null || !controller.isPlaying
-                ? Stack(
-                    children: [
-                      GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: GameParams.columns,
-                          ),
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: numCells,
-                          itemBuilder: (BuildContext context, int index) {
-                            return const Empty();
-                          }),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        right: 0,
-                        child: TextButton(
-                          onPressed: () async {
-                            await notifier.loadLevel(
-                                ref.read(preferencesRepositoryProvider).level);
-                            notifier.startGame();
-                          },
-                          child: const Text(
-                            'Start game',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                ? _buildPausedScreen()
                 : GridView.builder(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
@@ -122,18 +96,19 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
               Expanded(
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Coin(),
+                    Expanded(
+                      child: _buildDataItem(
+                        firstWidget: const AspectRatio(
+                          aspectRatio: 1,
+                          child: Coin(),
+                        ),
+                        data: controller.points.length.toString(),
                       ),
                     ),
-                    Text(
-                      controller.points.length.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                    Expanded(
+                      child: _buildDataItem(
+                        firstWidget: const Icon(Icons.timer_outlined),
+                        data: secondsToTime(controller.gameTimerInSeconds),
                       ),
                     ),
                   ],
@@ -144,23 +119,12 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                 child: _buildPadControl(), //_buildButtonControl(notifier),
               ),
               Expanded(
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Player(),
-                      ),
-                    ),
-                    Text(
-                      controller.lives.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
+                child: _buildDataItem(
+                  firstWidget: const AspectRatio(
+                    aspectRatio: 1,
+                    child: Player(),
+                  ),
+                  data: controller.lives.toString(),
                 ),
               ),
             ],
@@ -170,92 +134,32 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
     );
   }
 
-  // Widget _buildButtonControl(HomeController notifier) => Padding(
-  //       padding: const EdgeInsets.symmetric(vertical: 10),
-  //       child: Column(
-  //         children: [
-  //           Expanded(
-  //             child: Row(
-  //               children: [
-  //                 const Expanded(
-  //                   child: SizedBox(),
-  //                 ),
-  //                 _buildButtonItem(
-  //                   direction: 0,
-  //                   iconData: Icons.arrow_drop_up,
-  //                 ),
-  //                 const Expanded(
-  //                   child: SizedBox(),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           Expanded(
-  //             child: Row(
-  //               children: [
-  //                 _buildButtonItem(
-  //                   direction: 2,
-  //                   iconData: Icons.arrow_left,
-  //                 ),
-  //                 const Expanded(
-  //                   child: SizedBox(),
-  //                 ),
-  //                 _buildButtonItem(
-  //                   direction: 3,
-  //                   iconData: Icons.arrow_right,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           Expanded(
-  //             child: Row(
-  //               children: [
-  //                 const Expanded(
-  //                   child: SizedBox(),
-  //                 ),
-  //                 _buildButtonItem(
-  //                   direction: 1,
-  //                   iconData: Icons.arrow_drop_down,
-  //                 ),
-  //                 const Expanded(
-  //                   child: SizedBox(),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-
-  // Widget _buildButtonItem({
-  //   required int direction,
-  //   required IconData iconData,
-  // }) {
-  //   return Expanded(
-  //     child: GestureDetector(
-  //       onTap: () {
-  //         final notifier = ref.read(homeControllerProvider.notifier);
-  //         notifier.onButtonDown(
-  //           direction: direction,
-  //           canvasSize: widget.canvasSize,
-  //         );
-  //       },
-  //       child: Container(
-  //         width: double.infinity,
-  //         height: double.infinity,
-  //         decoration: BoxDecoration(
-  //           color: kColor,
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: Icon(
-  //           iconData,
-  //           size: kBtnSize,
-  //           color: Colors.white,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _buildDataItem({
+    required Widget firstWidget,
+    required String data,
+  }) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: firstWidget,
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              data,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildPadControl() {
     return LayoutBuilder(
@@ -333,6 +237,79 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           ),
         ),
       );
+
+  Widget _buildPausedScreen() {
+    final notifier = ref.watch(homeControllerProvider.notifier);
+    return Stack(
+      children: [
+        GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: GameParams.columns,
+            ),
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemCount: numCells,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 33) {
+                return const Player();
+              }
+              if ([11, 12, 13, 21, 31, 41, 51, 61, 58, 68, 78, 88, 98, 97, 96]
+                  .contains(index)) {
+                return const Wall();
+              }
+              if (index == 92) {
+                return const Finish();
+              }
+              if (index == 94) {
+                return const Coin();
+              }
+              if (index == 36) {
+                return const Enemy();
+              }
+              return const Empty();
+            }),
+        Positioned(
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right: 0,
+          child: TextButton(
+            onPressed: () async {
+              await notifier
+                  .loadLevel(ref.read(preferencesRepositoryProvider).level);
+              notifier.startGame();
+            },
+            child: const Text(
+              'CUBETIS',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          top: 80,
+          bottom: 0,
+          right: 0,
+          child: TextButton(
+            onPressed: () async {
+              await notifier
+                  .loadLevel(ref.read(preferencesRepositoryProvider).level);
+              notifier.startGame();
+            },
+            child: const Text(
+              'Pulsa para jugar',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   int _sendPadInfo(TapDownDetails details, Size size) {
     final x = details.localPosition.dx;
