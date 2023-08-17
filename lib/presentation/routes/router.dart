@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../modules/home/home_view.dart';
+import '../modules/info/info_view.dart';
 import 'routes.dart';
 
 mixin RouterMixin on State<MyApp> {
@@ -41,6 +42,11 @@ mixin RouterMixin on State<MyApp> {
         name: Routes.offline,
         path: '/offline',
         builder: (_, __) => const OfflineView(),
+      ),
+      GoRoute(
+        name: Routes.info,
+        path: '/info',
+        builder: (_, __) => const InfoView(),
       ),
     ],
   );

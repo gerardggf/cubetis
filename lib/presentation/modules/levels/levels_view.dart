@@ -22,6 +22,15 @@ class LevelsView extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
+              context.pushNamed(Routes.info);
+            },
+            icon: const Icon(
+              Icons.info_outline,
+            ),
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+            onPressed: () {
               notifier.updateIsAdmin(!controller.isAdmin);
             },
             icon: Icon(
@@ -73,8 +82,13 @@ class LevelsView extends ConsumerWidget {
                 margin: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    width: 1,
+                  image: const DecorationImage(
+                    image: AssetImage('assets/img/wall.png'),
+                    opacity: 0.6,
+                    colorFilter: ColorFilter.mode(
+                      Colors.brown,
+                      BlendMode.color,
+                    ),
                   ),
                 ),
                 child: Column(
@@ -84,13 +98,14 @@ class LevelsView extends ConsumerWidget {
                       'Nivel ${allLevels[index].level}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                     Text(
                       'Diff: ${allLevels[index].difficulty.toString()}',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.grey,
+                        color: Colors.white,
                       ),
                     ),
                     // Text(
