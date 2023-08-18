@@ -114,6 +114,14 @@ class LevelsView extends ConsumerWidget {
               child: Container(
                 margin: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
+                  border:
+                      ref.watch(preferencesRepositoryProvider).level == index
+                          ? Border.all(
+                              color: Colors.orange,
+                              strokeAlign: BorderSide.strokeAlignOutside,
+                              width: 3,
+                            )
+                          : null,
                   borderRadius: BorderRadius.circular(10),
                   image: const DecorationImage(
                     image: AssetImage('assets/img/wall.png'),

@@ -8,6 +8,7 @@ import 'package:cubetis/presentation/objects/finish.dart';
 import 'package:cubetis/presentation/objects/player.dart';
 import 'package:cubetis/presentation/objects/wall.dart';
 import 'package:cubetis/presentation/utils/date_time_conversions.dart';
+import 'package:cubetis/presentation/utils/dialogs/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,7 +40,6 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
               notifier.updateIsPlaying(false);
               return;
             }
-            notifier.updateIsPlaying(true);
           },
           onTapDown: (details) {
             notifier.onScreenTapDown(
@@ -93,6 +93,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(width: 5),
               Expanded(
                 child: Column(
                   children: [
@@ -111,6 +112,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                         data: secondsToTime(controller.gameTimerInSeconds),
                       ),
                     ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),
@@ -119,14 +121,40 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                 child: _buildPadControl(), //_buildButtonControl(notifier),
               ),
               Expanded(
-                child: _buildDataItem(
-                  firstWidget: const AspectRatio(
-                    aspectRatio: 1,
-                    child: Player(),
-                  ),
-                  data: controller.lives.toString(),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _buildDataItem(
+                        firstWidget: const AspectRatio(
+                          aspectRatio: 1,
+                          child: Player(),
+                        ),
+                        data: controller.lives.toString(),
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildDataItem(
+                        firstWidget: const Icon(Icons.restore),
+                        data: 'Reset',
+                        onPressed: () {
+                          showCustomWarningDialog(
+                            context: context,
+                            title: 'Reiniciar niveles',
+                            content:
+                                '¿Quieres reiniciar todos los parámetros y los niveles?',
+                            onPressedConfirm: () {
+                              Navigator.pop(context);
+                              notifier.restartFromZero();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                  ],
                 ),
               ),
+              const SizedBox(width: 5),
             ],
           ),
         ),
@@ -137,27 +165,33 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
   Widget _buildDataItem({
     required Widget firstWidget,
     required String data,
+    VoidCallback? onPressed,
   }) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: firstWidget,
-        ),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              data,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: firstWidget,
+          ),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                data,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -277,6 +311,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
             onPressed: () async {
               await notifier
                   .loadLevel(ref.read(preferencesRepositoryProvider).level);
+
               notifier.startGame();
             },
             child: const Text(
@@ -297,6 +332,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
             onPressed: () async {
               await notifier
                   .loadLevel(ref.read(preferencesRepositoryProvider).level);
+
               notifier.startGame();
             },
             child: const Text(

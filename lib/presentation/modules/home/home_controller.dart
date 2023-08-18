@@ -99,7 +99,19 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   void updateGameTimer(int value) {
-    state = state.copyWith(gameTimerInSeconds: state.gameTimerInSeconds + 1);
+    state = state.copyWith(gameTimerInSeconds: value);
+  }
+
+  //restart all levels and params
+  void restartFromZero() {
+    updateIsPlaying(false);
+    loadLevel(0);
+    gameTimer?.cancel();
+    gameTimer = null;
+    updateGameTimer(0);
+    updatePlayerLives(GameParams.lives);
+    preferencesRepository.setLevel(0);
+    preferencesRepository.setMaxLevel(0);
   }
 
   Future<void> loadLevel(int levelId) async {
@@ -159,6 +171,7 @@ class HomeController extends StateNotifier<HomeState> {
   void startGame() {
     if (state.level == null) return;
     updateIsPlaying(true);
+    if (gameTimer != null) return;
     gameTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
