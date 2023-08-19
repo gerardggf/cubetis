@@ -2,6 +2,7 @@ import 'package:cubetis/main.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_view.dart';
 import 'package:cubetis/presentation/modules/levels/levels_view.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_view.dart';
+import 'package:cubetis/presentation/modules/new_level/upload_new_level_view.dart';
 import 'package:cubetis/presentation/modules/offline/offline_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,11 @@ mixin RouterMixin on State<MyApp> {
         name: Routes.newLevel,
         path: '/new-level',
         builder: (_, __) => const NewLevelView(),
+      ),
+      GoRoute(
+        name: Routes.uploadNewLevel,
+        path: '/upload-new-level',
+        builder: (_, __) => const UploadNewLevelView(),
       ),
       GoRoute(
         name: Routes.editLevel,

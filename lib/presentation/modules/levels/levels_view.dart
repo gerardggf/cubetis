@@ -149,6 +149,14 @@ class LevelsView extends ConsumerWidget {
                         color: Colors.white,
                       ),
                     ),
+                    if (allLevels[index].name.isNotEmpty)
+                      Text(
+                        allLevels[index].name,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.white38,
+                        ),
+                      ),
                     // Text(
                     //   allLevels[index].name,
                     //   style: const TextStyle(

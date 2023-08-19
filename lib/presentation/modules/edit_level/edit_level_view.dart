@@ -45,6 +45,7 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
     return AbsorbPointer(
       absorbing: controller.fetching,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           title: Text(

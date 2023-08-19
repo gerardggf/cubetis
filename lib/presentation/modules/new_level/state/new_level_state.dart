@@ -8,11 +8,13 @@ class NewLevelState with _$NewLevelState {
   factory NewLevelState({
     @Default(false) bool fetching,
     @Default('') String name,
+    @Default(0) int levelId,
+    @Default(0) int difficulty,
     @Default(0) int playerPos,
     @Default(0) int objectTypeSelector,
     @Default([]) List<int> wallsPos,
     @Default([]) List<int> coinsPos,
     @Default([]) List<EnemyModel> enemiesPos,
-    @Default(0) int finishPos,
+    @Default(1) int finishPos,
   }) = _NewLevelState;
 }

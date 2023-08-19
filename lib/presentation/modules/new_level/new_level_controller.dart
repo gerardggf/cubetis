@@ -33,6 +33,18 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     state = state.copyWith(finishPos: finish);
   }
 
+  void updateName(String name) {
+    state = state.copyWith(name: name);
+  }
+
+  void updateLevelId(int levelId) {
+    state = state.copyWith(levelId: levelId);
+  }
+
+  void updateDifficulty(int difficulty) {
+    state = state.copyWith(difficulty: difficulty);
+  }
+
   void newEnemiesPos(int enemy) {
     final enemyPosCopy = () {
       if (state.enemiesPos.isNotEmpty) {
@@ -97,6 +109,9 @@ class NewLevelController extends StateNotifier<NewLevelState> {
   }
 
   void newWallsPos(int wall) {
+    if (state.coinsPos.contains(wall)) {
+      return;
+    }
     final wallsCopy = () {
       if (state.wallsPos.contains(wall)) {
         return List<int>.from(state.wallsPos)..remove(wall);
@@ -134,7 +149,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
       LevelModel(
         id: '',
         level: levelsRepository.allLevels.length,
-        difficulty: 0,
+        difficulty: state.difficulty,
         name: state.name,
         coinsPos: state.coinsPos,
         enemies: enemies,

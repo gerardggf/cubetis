@@ -115,6 +115,7 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
               const SizedBox(
                 child: Text(
                   '1',
+                  style: TextStyle(color: Colors.grey),
                 ),
               ),
               SizedBox(
@@ -142,6 +143,7 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
               const SizedBox(
                 child: Text(
                   '1',
+                  style: TextStyle(color: Colors.grey),
                 ),
               ),
             ],

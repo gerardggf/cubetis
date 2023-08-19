@@ -100,6 +100,9 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   }
 
   void newWallsPos(int wall) {
+    if (state.coinsPos.contains(wall)) {
+      return;
+    }
     final wallsCopy = () {
       if (state.wallsPos.contains(wall)) {
         return List<int>.from(state.wallsPos)..remove(wall);

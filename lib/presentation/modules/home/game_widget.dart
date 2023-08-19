@@ -60,7 +60,6 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                       for (var i in controller.level!.enemies) {
                         enemiesList.addAll(i.enemiesPos);
                       }
-
                       if (controller.playerPos == index) {
                         return const Player();
                       } else if (controller.enemiesPos.contains(index)) {
@@ -108,9 +107,14 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                     ),
                     Expanded(
                       child: _buildDataItem(
-                        firstWidget: const Icon(Icons.timer_outlined),
-                        data: secondsToTime(controller.gameTimerInSeconds),
-                      ),
+                          firstWidget: const Icon(Icons.timer_outlined),
+                          data: secondsToTime(controller.gameTimerInSeconds),
+                          onPressed: () {
+                            if (controller.isPlaying) {
+                              notifier.updateIsPlaying(false);
+                              return;
+                            }
+                          }),
                     ),
                     const SizedBox(height: 15),
                   ],

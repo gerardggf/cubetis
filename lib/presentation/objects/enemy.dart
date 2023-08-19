@@ -37,7 +37,12 @@ class Enemy extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                enemyIndex!.join('|'),
+                enemyIndex!.map((e) {
+                  if (e == 0) {
+                    return 'x';
+                  }
+                  return e.toString();
+                }).join('|'),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,

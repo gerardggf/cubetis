@@ -33,4 +33,16 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
       level,
     );
   }
+
+  @override
+  int get timeInSeconds =>
+      sharedPreferences.getInt(Preferences.timeInSeconds.name) ?? 0;
+
+  @override
+  Future<void> setTimeInSeconds(int timeInSeconds) async {
+    await sharedPreferences.setInt(
+      Preferences.timeInSeconds.name,
+      timeInSeconds,
+    );
+  }
 }
