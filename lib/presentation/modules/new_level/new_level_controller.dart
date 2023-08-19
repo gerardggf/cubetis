@@ -1,3 +1,4 @@
+import 'package:cubetis/const/const.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/presentation/modules/new_level/state/new_level_state.dart';
@@ -77,7 +78,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
   }
 
   void addEnemy() {
-    if (state.enemiesPos.length > 10) {
+    if (state.enemiesPos.length > GameParams.maxEnemies) {
       return;
     }
     final enemiesCopy = List.generate(
@@ -150,7 +151,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         id: '',
         level: levelsRepository.allLevels.length,
         difficulty: state.difficulty,
-        name: state.name,
+        name: state.name[0].toUpperCase() + state.name.substring(1),
         coinsPos: state.coinsPos,
         enemies: enemies,
         finishPos: state.finishPos,
@@ -168,9 +169,16 @@ class NewLevelController extends StateNotifier<NewLevelState> {
 
   void clearAll() {
     state = state.copyWith(
-      enemiesPos: [],
+      enemiesPos: [
+        EnemyModel(
+          id: 0,
+          enemiesPos: [],
+          speed: 1,
+        ),
+      ],
       coinsPos: [],
       wallsPos: [],
     );
+    selectedEnemy = 0;
   }
 }

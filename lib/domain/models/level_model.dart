@@ -5,6 +5,8 @@ class LevelModel {
   final String name;
   final List<int> coinsPos;
   final List<EnemyModel> enemies;
+  final List<DoorModel>? doors;
+
   final int finishPos;
   final int playerPos;
   final List<int> wallsPos;
@@ -17,6 +19,7 @@ class LevelModel {
     required this.name,
     required this.coinsPos,
     required this.enemies,
+    this.doors,
     required this.finishPos,
     required this.playerPos,
     required this.wallsPos,
@@ -30,6 +33,7 @@ class LevelModel {
     String? name,
     List<int>? coinsPos,
     List<EnemyModel>? enemies,
+    List<DoorModel>? doors,
     int? playerPos,
     int? finishPos,
     List<int>? wallsPos,
@@ -42,6 +46,7 @@ class LevelModel {
         name: name ?? this.name,
         coinsPos: coinsPos ?? this.coinsPos,
         enemies: enemies ?? this.enemies,
+        doors: doors ?? this.doors,
         playerPos: playerPos ?? this.playerPos,
         finishPos: finishPos ?? this.finishPos,
         wallsPos: wallsPos ?? this.wallsPos,
@@ -53,12 +58,26 @@ class LevelModel {
         level: json["level"],
         difficulty: json["difficulty"],
         name: json["name"],
-        coinsPos: List<int>.from(json["coinsPos"].map((x) => x)),
+        coinsPos: List<int>.from(
+          json["coinsPos"].map((x) => x),
+        ),
         enemies: List<EnemyModel>.from(
-            json["enemies"].map((x) => EnemyModel.fromJson(x))),
+          json["enemies"].map(
+            (x) => EnemyModel.fromJson(x),
+          ),
+        ),
+        doors: json["doors"] == null
+            ? null
+            : List<DoorModel>.from(
+                json["doors"].map(
+                  (x) => DoorModel.fromJson(x),
+                ),
+              ),
         playerPos: json["playerPos"],
         finishPos: json["finishPos"],
-        wallsPos: List<int>.from(json["wallsPos"].map((x) => x)),
+        wallsPos: List<int>.from(
+          json["wallsPos"].map((x) => x),
+        ),
         creationDate: json["creationDate"],
       );
 
@@ -68,10 +87,23 @@ class LevelModel {
         "difficulty": difficulty,
         "name": name,
         "coinsPos": List<dynamic>.from(coinsPos.map((x) => x)),
-        "enemies": List<dynamic>.from(enemies.map((x) => x.toJson())),
+        "enemies": List<dynamic>.from(
+          enemies.map(
+            (x) => x.toJson(),
+          ),
+        ),
+        "doors": doors != null
+            ? List<dynamic>.from(
+                doors!.map(
+                  (x) => x.toJson(),
+                ),
+              )
+            : null,
         "playerPos": playerPos,
         "finishPos": finishPos,
-        "wallsPos": List<dynamic>.from(wallsPos.map((x) => x)),
+        "wallsPos": List<dynamic>.from(
+          wallsPos.map((x) => x),
+        ),
         "creationDate": creationDate,
       };
 }
@@ -112,6 +144,47 @@ class EnemyModel {
           enemiesPos.map((x) => x),
         ),
         "speed": speed,
+      };
+}
+
+class DoorModel {
+  final int id;
+  final int doorKeyPos;
+  final int doorPos;
+  final int timeInSeconds;
+
+  DoorModel({
+    required this.id,
+    required this.doorKeyPos,
+    required this.doorPos,
+    required this.timeInSeconds,
+  });
+
+  DoorModel copyWith({
+    int? id,
+    int? doorKeyPos,
+    int? doorPos,
+    int? timeInSeconds,
+  }) =>
+      DoorModel(
+        id: id ?? this.id,
+        doorKeyPos: doorKeyPos ?? this.doorKeyPos,
+        doorPos: doorPos ?? this.doorPos,
+        timeInSeconds: timeInSeconds ?? this.timeInSeconds,
+      );
+
+  factory DoorModel.fromJson(Map<String, dynamic> json) => DoorModel(
+        id: json["id"],
+        doorKeyPos: json["doorKeyPos"],
+        doorPos: json["doorPos"],
+        timeInSeconds: json["timeInSeconds"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "doorKeyPos": doorKeyPos,
+        "doorPos": doorPos,
+        "timeInSeconds": timeInSeconds,
       };
 }
 

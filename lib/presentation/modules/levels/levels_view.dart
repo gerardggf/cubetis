@@ -101,6 +101,9 @@ class LevelsView extends ConsumerWidget {
                           if (context.mounted) {
                             context.goNamed(Routes.home);
                           }
+                          ref
+                              .read(homeControllerProvider.notifier)
+                              .loadLevel(0);
                         },
                       );
                     },

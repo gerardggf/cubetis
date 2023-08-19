@@ -2,6 +2,7 @@ import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../const/const.dart';
 import 'state/edit_level_state.dart';
 
 final editLevelControllerProvider =
@@ -68,7 +69,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   }
 
   void addEnemy() {
-    if (state.enemiesPos.length > 10) {
+    if (state.enemiesPos.length > GameParams.maxEnemies) {
       return;
     }
     final enemiesCopy = List.generate(
@@ -161,7 +162,13 @@ class EditLevelController extends StateNotifier<EditLevelState> {
 
   void clearAll() {
     state = state.copyWith(
-      enemiesPos: [],
+      enemiesPos: [
+        EnemyModel(
+          id: 0,
+          enemiesPos: [],
+          speed: 1,
+        ),
+      ],
       coinsPos: [],
       wallsPos: [],
     );

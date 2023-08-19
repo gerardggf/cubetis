@@ -7,6 +7,7 @@ class GameParams {
 
 //tiempo movimiento enemigos
   static const enemyUpdateTime = 300;
+  static const maxEnemies = 50;
 }
 
 //tamaños por defecto

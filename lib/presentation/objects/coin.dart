@@ -15,12 +15,12 @@ class Coin extends StatelessWidget {
       padding: const EdgeInsets.all(kPadding + 10),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          shape: BoxShape.circle,
           color: color,
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
               blurRadius: 3,
-              color: Colors.yellow,
+              color: color,
               spreadRadius: 1,
             ),
           ],

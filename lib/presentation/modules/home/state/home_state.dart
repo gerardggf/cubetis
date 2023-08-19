@@ -14,6 +14,7 @@ class HomeState with _$HomeState {
     @Default(0) int playerPos,
     @Default(0) int gameTimerInSeconds,
     @Default([]) List<int> enemiesPos,
+    @Default(false) bool doorsOpen,
     @Default(GameParams.lives) int lives,
   }) = _HomeState;
 }

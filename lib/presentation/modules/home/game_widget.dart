@@ -2,6 +2,8 @@ import 'package:cubetis/const/const.dart';
 import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/home_controller.dart';
 import 'package:cubetis/presentation/objects/coin.dart';
+import 'package:cubetis/presentation/objects/door.dart';
+import 'package:cubetis/presentation/objects/door_key.dart';
 import 'package:cubetis/presentation/objects/empty.dart';
 import 'package:cubetis/presentation/objects/enemy.dart';
 import 'package:cubetis/presentation/objects/finish.dart';
@@ -71,11 +73,29 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                         );
                       } else if (controller.level!.wallsPos.contains(index)) {
                         return const Wall();
+                      } else if ((controller.level!.doors
+                                  ?.map((e) => e.doorPos)
+                                  .contains(index) ??
+                              false) &&
+                          !controller.doorsOpen) {
+                        return const Door();
+                      } else if (controller.level!.doors
+                              ?.map((e) => e.doorKeyPos)
+                              .contains(index) ??
+                          false) {
+                        return DoorKey(
+                          seconds: controller.level!.doors!.first.timeInSeconds,
+                        );
                       } else if (controller.level!.coinsPos.contains(index) &&
                           !controller.points.contains(index)) {
                         return const Coin();
                       } else if (controller.level!.finishPos == index) {
-                        return const Finish();
+                        return Finish(
+                          color: controller.points.length ==
+                                  controller.level!.coinsPos.length
+                              ? Colors.white
+                              : Colors.white24,
+                        );
                       } else {
                         return const Empty();
                       }

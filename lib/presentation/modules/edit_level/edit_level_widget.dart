@@ -112,38 +112,50 @@ class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const SizedBox(
-                child: Text(
-                  '1',
-                  style: TextStyle(color: Colors.grey),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    '1',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ),
-              SizedBox(
-                child: Text(
-                  controller.wallsPos.length.toString(),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    controller.wallsPos.length.toString(),
+                  ),
                 ),
               ),
-              SizedBox(
-                child: Text(
-                  controller.coinsPos.length.toString(),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    controller.coinsPos.length.toString(),
+                  ),
                 ),
               ),
-              SizedBox(
-                child: Text(
-                  controller.enemiesPos.isNotEmpty
-                      ? controller.enemiesPos
-                          .map(
-                            (e) => e.enemiesPos.length,
-                          )
-                          .toList()
-                          .join('|')
-                      : '0',
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Text(
+                      controller.enemiesPos.isNotEmpty
+                          ? controller.enemiesPos
+                              .map(
+                                (e) => e.enemiesPos.length,
+                              )
+                              .toList()
+                              .join('|')
+                          : '0',
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(
-                child: Text(
-                  '1',
-                  style: TextStyle(color: Colors.grey),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    '1',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ),
             ],

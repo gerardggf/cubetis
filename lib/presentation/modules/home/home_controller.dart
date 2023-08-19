@@ -24,7 +24,7 @@ class HomeController extends StateNotifier<HomeState> {
   final LevelsRepository levelsRepository;
   final PreferencesRepository preferencesRepository;
 
-  Timer? gameTimer, enemiesTimer;
+  Timer? gameTimer, enemiesTimer, doorsTimer;
 
   void _updatePlayerPos(int newPos) {
     if (state.level == null) return;
@@ -64,6 +64,33 @@ class HomeController extends StateNotifier<HomeState> {
       return;
     }
 
+    //doors stopping player movement
+    if ((state.level!.doors?.map((e) => e.doorPos).contains(newPos) ?? false) &&
+        !state.doorsOpen) {
+      return;
+    }
+
+    //on door key
+    if (state.level!.doors?.first.doorKeyPos == newPos) {
+      if (!state.doorsOpen) {
+        updateDoorsOpen(true);
+      }
+      doorsTimer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) {
+          if (doorsTimer!.tick > state.level!.doors!.first.timeInSeconds) {
+            updateDoorsOpen(false);
+            doorsTimer?.cancel();
+            if (state.level!.doors!.first.doorPos == state.playerPos) {
+              _hitByEnemy();
+              newPos = state.level!.playerPos;
+            }
+            return;
+          }
+        },
+      );
+    }
+
     //hit by enemy
     if (state.enemiesPos.contains(newPos) ||
         state.enemiesPos.contains(state.playerPos)) {
@@ -90,6 +117,10 @@ class HomeController extends StateNotifier<HomeState> {
     state = state.copyWith(enemiesPos: enemiesPos);
   }
 
+  void updateDoorsOpen(bool doorsOpen) {
+    state = state.copyWith(doorsOpen: doorsOpen);
+  }
+
   void updatePlayerLives(int value) {
     state = state.copyWith(lives: value);
   }
@@ -107,6 +138,7 @@ class HomeController extends StateNotifier<HomeState> {
     updateIsPlaying(false);
     loadLevel(0);
     gameTimer?.cancel();
+    doorsTimer?.cancel();
     gameTimer = null;
     updateGameTimer(0);
     updatePlayerLives(GameParams.lives);
@@ -185,6 +217,7 @@ class HomeController extends StateNotifier<HomeState> {
     updateIsPlaying(false);
     enemiesTimer?.cancel();
     gameTimer?.cancel();
+    doorsTimer?.cancel();
   }
 
   void _updateCurrentEnemies() {

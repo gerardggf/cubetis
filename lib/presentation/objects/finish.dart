@@ -13,9 +13,27 @@ class Finish extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(kPadding),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(seconds: 1),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          // gradient: const LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     Colors.lightBlueAccent,
+          //     Colors.white,
+          //     Colors.white,
+          //     Colors.lightBlueAccent,
+          //   ],
+          // ),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 1,
+              spreadRadius: 1,
+              color: color,
+            ),
+          ],
+          shape: BoxShape.circle,
           color: color,
         ),
       ),
