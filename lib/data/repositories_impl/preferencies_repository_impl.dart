@@ -1,3 +1,4 @@
+import 'package:cubetis/const/const.dart';
 import 'package:cubetis/domain/enums.dart';
 import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,6 +44,18 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     await sharedPreferences.setInt(
       Preferences.timeInSeconds.name,
       timeInSeconds,
+    );
+  }
+
+  @override
+  int get lives =>
+      sharedPreferences.getInt(Preferences.lives.name) ?? GameParams.lives;
+
+  @override
+  Future<void> setLives(int lives) async {
+    await sharedPreferences.setInt(
+      Preferences.lives.name,
+      lives,
     );
   }
 }

@@ -65,23 +65,32 @@ class HomeController extends StateNotifier<HomeState> {
     }
 
     //doors stopping player movement
-    if ((state.level!.doors?.map((e) => e.doorPos).contains(newPos) ?? false) &&
+    if ((state.level!.doors?.doorPos.contains(newPos) ?? false) &&
         !state.doorsOpen) {
       return;
     }
 
     //on door key
-    if (state.level!.doors?.first.doorKeyPos == newPos) {
+    if (state.level!.doors?.doorKeyPos.contains(newPos) ?? false) {
       if (!state.doorsOpen) {
         updateDoorsOpen(true);
       }
       doorsTimer = Timer.periodic(
         const Duration(seconds: 1),
         (_) {
-          if (doorsTimer!.tick > state.level!.doors!.first.timeInSeconds) {
+          if (state.level!.doors == null) {
+            doorsTimer?.cancel();
+            doorsTimer = null;
+            return;
+          }
+          if (doorsTimer == null) {
+            return;
+          }
+          if (doorsTimer!.tick > state.level!.doors!.timeInSeconds) {
             updateDoorsOpen(false);
             doorsTimer?.cancel();
-            if (state.level!.doors!.first.doorPos == state.playerPos) {
+            doorsTimer = null;
+            if (state.level!.doors!.doorPos.contains(state.playerPos)) {
               _hitByEnemy();
               newPos = state.level!.playerPos;
             }
@@ -168,6 +177,9 @@ class HomeController extends StateNotifier<HomeState> {
     state = state.copyWith(level: level);
     _updateCurrentEnemies();
     clearPoints();
+    updateDoorsOpen(false);
+    doorsTimer?.cancel();
+    doorsTimer = null;
     state = state.copyWith(playerPos: level.playerPos);
     // print(preferencesRepository.level);
     // print(state.level!.id);
@@ -188,6 +200,7 @@ class HomeController extends StateNotifier<HomeState> {
 
   void _hitByEnemy() {
     updatePlayerLives(state.lives - 1);
+    preferencesRepository.setLives(state.lives);
     if (state.lives <= 0) {
       loadLevel(0);
       updatePlayerLives(GameParams.lives);

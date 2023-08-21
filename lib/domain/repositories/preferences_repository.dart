@@ -13,6 +13,8 @@ abstract class PreferencesRepository {
   int get level;
   Future<void> setMaxLevel(int maxLevel);
   int get maxLevel;
+  Future<void> setLives(int lives);
+  int get lives;
   Future<void> setTimeInSeconds(int timeInSeconds);
   int get timeInSeconds;
 }

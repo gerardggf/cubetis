@@ -1,5 +1,6 @@
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../const/const.dart';
@@ -24,6 +25,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   LevelModel? editingLevel;
 
   int selectedEnemy = 0;
+  bool isKeyPos = false;
 
   void updateObjectTypeSelector(int value) {
     state = state.copyWith(objectTypeSelector: value);
@@ -35,6 +37,74 @@ class EditLevelController extends StateNotifier<EditLevelState> {
 
   void newFinishPos(int finish) {
     state = state.copyWith(finishPos: finish);
+  }
+
+  void newDoorPos(int doorPos) {
+    if (state.wallsPos.contains(doorPos) || state.coinsPos.contains(doorPos)) {
+      return;
+    }
+    if (isKeyPos) {
+      List<int> doorKeyCopy = state.doors != null
+          ? List.generate(
+              state.doors!.doorKeyPos.length,
+              (index) => state.doors!.doorKeyPos[index],
+            )
+          : [];
+      if (doorKeyCopy.contains(doorPos)) {
+        doorKeyCopy.remove(doorPos);
+      } else {
+        if (state.doors?.doorPos.contains(doorPos) ?? false) {
+          return;
+        }
+        doorKeyCopy.add(doorPos);
+      }
+
+      state = state.copyWith(
+        doors: DoorModel(
+          doorKeyPos: doorKeyCopy,
+          doorPos: state.doors?.doorPos ?? [],
+          timeInSeconds: state.doors?.timeInSeconds ??
+              state.doors?.timeInSeconds ??
+              GameParams.defaultDoorDuration,
+        ),
+      );
+      //print(state.doors?.doorPos);
+    } else {
+      List<int> doorCopy = state.doors != null
+          ? List.generate(
+              state.doors!.doorPos.length,
+              (index) => state.doors!.doorPos[index],
+            )
+          : [];
+      if (doorCopy.contains(doorPos)) {
+        doorCopy.remove(doorPos);
+      } else {
+        if (state.doors?.doorKeyPos.contains(doorPos) ?? false) {
+          return;
+        }
+        doorCopy.add(doorPos);
+      }
+      state = state.copyWith(
+        doors: DoorModel(
+          doorKeyPos: state.doors?.doorKeyPos ?? [],
+          doorPos: doorCopy,
+          timeInSeconds: state.doors?.timeInSeconds ??
+              state.doors?.timeInSeconds ??
+              GameParams.defaultDoorDuration,
+        ),
+      );
+      //print(state.doors?.doorKeyPos);
+    }
+  }
+
+  void updateDoorDuration(int seconds) {
+    state = state.copyWith(
+      doors: DoorModel(
+        doorKeyPos: state.doors?.doorKeyPos ?? [],
+        doorPos: state.doors?.doorPos ?? [],
+        timeInSeconds: seconds,
+      ),
+    );
   }
 
   void newEnemiesPos(int enemy) {
@@ -144,12 +214,13 @@ class EditLevelController extends StateNotifier<EditLevelState> {
         id: docId,
         level: levelId,
         difficulty: editingLevel!.difficulty,
-        name: state.name,
+        name: editingLevel!.name,
         coinsPos: state.coinsPos,
         enemies: state.enemiesPos,
         finishPos: state.finishPos,
         playerPos: state.playerPos,
         wallsPos: state.wallsPos,
+        doors: state.doors,
         creationDate: DateTime.now().toString(),
       ),
     );
@@ -171,11 +242,21 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       ],
       coinsPos: [],
       wallsPos: [],
+      doors: null,
     );
   }
 
   Future<void> loadLevelToUpdate(int level) async {
-    editingLevel = levelsRepository.allLevels[level];
+    try {
+      editingLevel = levelsRepository.allLevels[level];
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+          e.toString(),
+        );
+      }
+      return;
+    }
     if (editingLevel == null) return;
     state = state.copyWith(
       coinsPos: editingLevel!.coinsPos,
@@ -183,6 +264,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       wallsPos: editingLevel!.wallsPos,
       playerPos: editingLevel!.playerPos,
       finishPos: editingLevel!.finishPos,
+      doors: editingLevel!.doors,
     );
   }
 }

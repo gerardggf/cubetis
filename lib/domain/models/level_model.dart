@@ -5,8 +5,7 @@ class LevelModel {
   final String name;
   final List<int> coinsPos;
   final List<EnemyModel> enemies;
-  final List<DoorModel>? doors;
-
+  final DoorModel? doors;
   final int finishPos;
   final int playerPos;
   final List<int> wallsPos;
@@ -33,7 +32,7 @@ class LevelModel {
     String? name,
     List<int>? coinsPos,
     List<EnemyModel>? enemies,
-    List<DoorModel>? doors,
+    DoorModel? doors,
     int? playerPos,
     int? finishPos,
     List<int>? wallsPos,
@@ -66,13 +65,7 @@ class LevelModel {
             (x) => EnemyModel.fromJson(x),
           ),
         ),
-        doors: json["doors"] == null
-            ? null
-            : List<DoorModel>.from(
-                json["doors"].map(
-                  (x) => DoorModel.fromJson(x),
-                ),
-              ),
+        doors: json["doors"] == null ? null : DoorModel.fromJson(json["doors"]),
         playerPos: json["playerPos"],
         finishPos: json["finishPos"],
         wallsPos: List<int>.from(
@@ -92,13 +85,7 @@ class LevelModel {
             (x) => x.toJson(),
           ),
         ),
-        "doors": doors != null
-            ? List<dynamic>.from(
-                doors!.map(
-                  (x) => x.toJson(),
-                ),
-              )
-            : null,
+        "doors": doors != null ? doors!.toJson() : null,
         "playerPos": playerPos,
         "finishPos": finishPos,
         "wallsPos": List<dynamic>.from(
@@ -148,42 +135,36 @@ class EnemyModel {
 }
 
 class DoorModel {
-  final int id;
-  final int doorKeyPos;
-  final int doorPos;
+  final List<int> doorKeyPos;
+  final List<int> doorPos;
   final int timeInSeconds;
 
   DoorModel({
-    required this.id,
     required this.doorKeyPos,
     required this.doorPos,
     required this.timeInSeconds,
   });
 
   DoorModel copyWith({
-    int? id,
-    int? doorKeyPos,
-    int? doorPos,
+    List<int>? doorKeyPos,
+    List<int>? doorPos,
     int? timeInSeconds,
   }) =>
       DoorModel(
-        id: id ?? this.id,
         doorKeyPos: doorKeyPos ?? this.doorKeyPos,
         doorPos: doorPos ?? this.doorPos,
         timeInSeconds: timeInSeconds ?? this.timeInSeconds,
       );
 
   factory DoorModel.fromJson(Map<String, dynamic> json) => DoorModel(
-        id: json["id"],
-        doorKeyPos: json["doorKeyPos"],
-        doorPos: json["doorPos"],
+        doorKeyPos: List<int>.from(json["doorKeyPos"].map((x) => x)),
+        doorPos: List<int>.from(json["doorPos"].map((x) => x)),
         timeInSeconds: json["timeInSeconds"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "doorKeyPos": doorKeyPos,
-        "doorPos": doorPos,
+        "doorKeyPos": List<dynamic>.from(doorKeyPos.map((x) => x)),
+        "doorPos": List<dynamic>.from(doorPos.map((x) => x)),
         "timeInSeconds": timeInSeconds,
       };
 }

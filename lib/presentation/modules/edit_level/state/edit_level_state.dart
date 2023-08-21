@@ -13,6 +13,7 @@ class EditLevelState with _$EditLevelState {
     @Default([]) List<int> wallsPos,
     @Default([]) List<int> coinsPos,
     @Default([]) List<EnemyModel> enemiesPos,
+    @Default(null) DoorModel? doors,
     @Default(1) int finishPos,
   }) = _EditLevelState;
 }

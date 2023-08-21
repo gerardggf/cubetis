@@ -1,5 +1,7 @@
 import 'package:cubetis/const/const.dart';
 import 'package:cubetis/presentation/objects/coin.dart';
+import 'package:cubetis/presentation/objects/door.dart';
+import 'package:cubetis/presentation/objects/door_key.dart';
 import 'package:cubetis/presentation/objects/empty.dart';
 import 'package:cubetis/presentation/objects/enemy.dart';
 import 'package:cubetis/presentation/objects/finish.dart';
@@ -20,6 +22,11 @@ class NewLevelWidget extends ConsumerStatefulWidget {
   @override
   ConsumerState<NewLevelWidget> createState() => _NewLevelWidgetState();
 }
+
+final List<int> doorsSecondsOptions = List<int>.generate(
+  60,
+  (index) => index + 1,
+);
 
 class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
   final int numCells = GameParams.columns * GameParams.rows;
@@ -64,6 +71,9 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                     case 4:
                       notifier.newFinishPos(index);
                       break;
+                    case 5:
+                      notifier.newDoorPos(index);
+                      break;
                   }
                 },
                 child: Builder(
@@ -92,6 +102,12 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                       return const Wall();
                     } else if (controller.coinsPos.contains(index)) {
                       return const Coin();
+                    } else if (controller.doors?.doorKeyPos.contains(index) ??
+                        false) {
+                      return const DoorKey();
+                    } else if (controller.doors?.doorPos.contains(index) ??
+                        false) {
+                      return const Door();
                     } else if (controller.finishPos == index) {
                       return const Finish();
                     } else {
@@ -154,6 +170,13 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                   child: Text(
                     '1',
                     style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    '${controller.doors?.doorPos.length.toString() ?? '0'} | ${controller.doors?.doorKeyPos.length.toString() ?? '0'}',
                   ),
                 ),
               ),
@@ -269,102 +292,247 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                     child: const Finish(),
                   ),
                 ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: controller.objectTypeSelector == 5
+                        ? Border.all(
+                            strokeAlign: BorderSide.strokeAlignOutside,
+                            color: Colors.yellow,
+                            width: 3,
+                          )
+                        : null,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width: objectButtonSize,
+                  height: objectButtonSize,
+                  child: InkWell(
+                    onTap: () {
+                      notifier.updateObjectTypeSelector(5);
+                    },
+                    child: notifier.isKeyPos ? const DoorKey() : const Door(),
+                  ),
+                ),
               ],
             ),
           ),
         ),
         Expanded(
           flex: 2,
-          child: controller.objectTypeSelector == 3
-              ? Row(
+          child: Builder(
+            builder: (context) {
+              switch (controller.objectTypeSelector) {
+                case 0:
+                  return Center(
+                    child: Text(
+                      controller.playerPos.toString(),
+                    ),
+                  );
+                case 1:
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        controller.wallsPos.join(', '),
+                      ),
+                    ),
+                  );
+                case 2:
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        controller.coinsPos.join(', '),
+                      ),
+                    ),
+                  );
+                case 3:
+                  return _buildEnemiesMenu();
+                case 4:
+                  return Center(
+                    child: Text(
+                      controller.finishPos.toString(),
+                    ),
+                  );
+                case 5:
+                  return _buildDoorsMenu();
+                default:
+                  return const SizedBox();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDoorsMenu() {
+    final controller = ref.watch(newLevelControllerProvider);
+    final notifier = ref.watch(newLevelControllerProvider.notifier);
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: !notifier.isKeyPos ? Colors.blue : null,
+                    ),
+                    onPressed: () {
+                      notifier.isKeyPos = false;
+                      setState(() {});
+                    },
+                    child: const Text('Door'),
+                  ),
+                  Text(
+                    controller.doors?.doorPos.join(', ') ?? '',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: notifier.isKeyPos ? Colors.blue : null,
+                    ),
+                    onPressed: () {
+                      notifier.isKeyPos = true;
+                      setState(() {});
+                    },
+                    child: const Text('DoorKey'),
+                  ),
+                  Text(
+                    controller.doors?.doorKeyPos.join(', ') ?? '',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (controller.doors != null)
+          Expanded(
+            child: Center(
+              child: DropdownButton<int>(
+                value: controller.doors?.timeInSeconds ??
+                    GameParams.defaultDoorDuration,
+                onChanged: (value) {
+                  notifier.updateDoorDuration(
+                    value ?? GameParams.defaultDoorDuration,
+                  );
+                },
+                items: [
+                  for (var doorsSecondsOption in doorsSecondsOptions)
+                    DropdownMenuItem<int>(
+                      value: doorsSecondsOption,
+                      child: Text(
+                        doorsSecondsOption.toString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildEnemiesMenu() {
+    final controller = ref.watch(newLevelControllerProvider);
+    final notifier = ref.watch(newLevelControllerProvider.notifier);
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: [
+              const Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Text('Selecciona al enemigo'),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          const Expanded(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text('Selecciona al enemigo'),
-                              ),
-                            ),
+                    for (int i = 0; i < controller.enemiesPos.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 2,
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: notifier.selectedEnemy == i
+                                ? Colors.blue
+                                : null,
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: ListView(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                for (int i = 0;
-                                    i < controller.enemiesPos.length;
-                                    i++)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 2,
-                                    ),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            notifier.selectedEnemy == i
-                                                ? Colors.blue
-                                                : null,
-                                      ),
-                                      onPressed: () {
-                                        notifier.selectedEnemy = i;
-                                        setState(() {});
-                                      },
-                                      child: Text(
-                                        controller.enemiesPos[i].id.toString(),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
+                          onPressed: () {
+                            notifier.selectedEnemy = i;
+                            setState(() {});
+                          },
+                          child: Text(
+                            controller.enemiesPos[i].id.toString(),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: IconButton(
-                              onPressed: () {
-                                notifier.addEnemy();
-                                setState(() {
-                                  notifier.selectedEnemy =
-                                      controller.enemiesPos.length;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: IconButton(
-                              onPressed: () {
-                                notifier.deleteLastEnemy();
-                                setState(() {
-                                  notifier.selectedEnemy = 0;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
-                )
-              : const SizedBox(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    notifier.addEnemy();
+                    setState(() {
+                      notifier.selectedEnemy = controller.enemiesPos.length;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    notifier.deleteLastEnemy();
+                    setState(() {
+                      notifier.selectedEnemy = 0;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 30,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

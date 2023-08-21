@@ -6,8 +6,10 @@ class GameParams {
   static const int lives = 30;
 
 //tiempo movimiento enemigos
-  static const enemyUpdateTime = 300;
-  static const maxEnemies = 50;
+  static const int enemyUpdateTime = 300;
+  static const int maxEnemies = 50;
+
+  static const int defaultDoorDuration = 10; //in seconds
 }
 
 //tamaños por defecto
@@ -16,4 +18,4 @@ const Color kBackgroundColor = Colors.black;
 const double kBtnSize = 60;
 
 //color principal de todo el juego
-const kColor = Colors.blue;
+const Color kColor = Colors.blue;

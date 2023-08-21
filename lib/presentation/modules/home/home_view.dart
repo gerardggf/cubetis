@@ -26,6 +26,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         canvasSize = MediaQuery.of(context).size;
+        ref
+            .read(homeControllerProvider.notifier)
+            .updatePlayerLives(ref.read(preferencesRepositoryProvider).lives);
         setState(() {});
       },
     );

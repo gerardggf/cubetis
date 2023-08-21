@@ -73,18 +73,16 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
                         );
                       } else if (controller.level!.wallsPos.contains(index)) {
                         return const Wall();
-                      } else if ((controller.level!.doors
-                                  ?.map((e) => e.doorPos)
+                      } else if ((controller.level!.doors?.doorPos
                                   .contains(index) ??
                               false) &&
                           !controller.doorsOpen) {
                         return const Door();
-                      } else if (controller.level!.doors
-                              ?.map((e) => e.doorKeyPos)
+                      } else if (controller.level!.doors?.doorKeyPos
                               .contains(index) ??
                           false) {
                         return DoorKey(
-                          seconds: controller.level!.doors!.first.timeInSeconds,
+                          seconds: controller.level!.doors!.timeInSeconds,
                         );
                       } else if (controller.level!.coinsPos.contains(index) &&
                           !controller.points.contains(index)) {
