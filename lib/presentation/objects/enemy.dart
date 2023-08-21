@@ -15,6 +15,7 @@ class Enemy extends StatelessWidget {
     return Stack(
       children: [
         Container(
+          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             //color: color,
@@ -28,9 +29,7 @@ class Enemy extends StatelessWidget {
               ],
             ),
           ),
-          child: const Center(
-            child: Text("ò_ó"),
-          ),
+          child: Image.asset('assets/img/enemy.png'),
         ),
         if (enemyIndex != null)
           Center(

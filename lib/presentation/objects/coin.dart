@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 class Coin extends StatelessWidget {
   const Coin({
     super.key,
-    this.color = Colors.yellow,
+    this.color = Colors.orangeAccent,
+    this.secondaryColor = Colors.yellow,
   });
 
-  final Color color;
+  final Color color, secondaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,20 @@ class Coin extends StatelessWidget {
               spreadRadius: 1,
             ),
           ],
+        ),
+        child: Container(
+          margin: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: secondaryColor,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 3,
+                color: secondaryColor,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );
