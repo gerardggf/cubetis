@@ -46,7 +46,7 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Level ${widget.id}',
+            ref.watch(editLevelControllerProvider).name,
             style: const TextStyle(
               color: Colors.black,
             ),

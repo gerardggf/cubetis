@@ -63,7 +63,9 @@ class _LevelsViewState extends ConsumerState<LevelsView>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All levels'),
+        title: Text(
+          controller.isUserLevels ? 'User levels' : 'Game levels',
+        ),
         actions: [
           if (!ref.read(levelsControllerProvider).isUserLevels)
             IconButton(
