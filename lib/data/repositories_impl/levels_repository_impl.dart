@@ -11,22 +11,22 @@ class LevelsRepositoryImpl implements LevelsRepository {
   @override
   Future<bool> createLevel({
     required LevelModel level,
-    bool isUserlevel = true,
+    bool isUserLevel = true,
   }) {
     return firebaseFirestoreService.createLevel(
       level: level,
-      userLevels: isUserlevel,
+      userLevels: isUserLevel,
     );
   }
 
   @override
   Future<bool> deleteLevel({
     required String id,
-    bool isUserlevel = true,
+    bool isUserLevel = true,
   }) {
     return firebaseFirestoreService.deleteLevel(
       levelId: id,
-      userLevels: isUserlevel,
+      userLevels: isUserLevel,
     );
   }
 
@@ -34,12 +34,12 @@ class LevelsRepositoryImpl implements LevelsRepository {
   Future<bool> updateLevel({
     required String id,
     required LevelModel level,
-    bool isUserlevel = true,
+    bool isUserLevel = true,
   }) {
     return firebaseFirestoreService.updateLevel(
       id: id,
       level: level,
-      userLevels: isUserlevel,
+      userLevels: isUserLevel,
     );
   }
 

@@ -414,29 +414,33 @@ class _EditLevelWidgetState extends ConsumerState<EditLevelWidget> {
         ),
         if (controller.doors != null)
           Expanded(
-            child: Center(
-              child: DropdownButton<int>(
-                value: controller.doors?.timeInSeconds ??
-                    controller.doors?.timeInSeconds ??
-                    GameParams.defaultDoorDuration,
-                onChanged: (value) {
-                  notifier.updateDoorDuration(
-                    value ??
-                        controller.doors?.timeInSeconds ??
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Duración:'),
+                  DropdownButton<int>(
+                    value: controller.doors?.timeInSeconds ??
                         GameParams.defaultDoorDuration,
-                  );
-                },
-                items: [
-                  for (var doorsSecondsOption in doorsSecondsOptions)
-                    DropdownMenuItem<int>(
-                      value: doorsSecondsOption,
-                      child: Text(
-                        doorsSecondsOption.toString(),
-                        style: const TextStyle(
-                          fontSize: 18,
+                    onChanged: (value) {
+                      notifier.updateDoorDuration(
+                        value ?? GameParams.defaultDoorDuration,
+                      );
+                    },
+                    items: [
+                      for (var doorsSecondsOption in doorsSecondsOptions)
+                        DropdownMenuItem<int>(
+                          value: doorsSecondsOption,
+                          child: Text(
+                            '${doorsSecondsOption.toString()} seg.',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -8,6 +8,8 @@ class EditLevelState with _$EditLevelState {
   factory EditLevelState({
     @Default(false) bool fetching,
     @Default('') String name,
+    @Default('') String authorId,
+    @Default(0) int difficulty,
     @Default(0) int playerPos,
     @Default(0) int objectTypeSelector,
     @Default([]) List<int> wallsPos,

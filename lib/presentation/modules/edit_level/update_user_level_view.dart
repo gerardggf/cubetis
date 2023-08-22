@@ -1,34 +1,48 @@
+import 'package:cubetis/presentation/modules/edit_level/edit_level_controller.dart';
 import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
-import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../utils/custom_snack_bar.dart';
 
-class UploadNewUserLevelView extends ConsumerStatefulWidget {
-  const UploadNewUserLevelView({super.key});
+class UpdateUserLevelView extends ConsumerStatefulWidget {
+  const UpdateUserLevelView({super.key});
 
   @override
-  ConsumerState<UploadNewUserLevelView> createState() =>
+  ConsumerState<UpdateUserLevelView> createState() =>
       _UploadNewLevelViewState();
 }
 
 final difficultyLevels = List<int>.generate(101, (index) => index);
 
-class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
+class _UploadNewLevelViewState extends ConsumerState<UpdateUserLevelView> {
   final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        final controller = ref.read(editLevelControllerProvider);
+        final notifier = ref.read(editLevelControllerProvider.notifier);
+
+        _nameController.text = controller.name;
+        notifier.updateDifficulty(controller.difficulty);
+      },
+    );
+  }
 
   bool isUserLevel = true;
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(newLevelControllerProvider);
-    final notifier = ref.watch(newLevelControllerProvider.notifier);
+    final controller = ref.watch(editLevelControllerProvider);
+    final notifier = ref.watch(editLevelControllerProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nuevo nivel'),
+        title: const Text('Nivel editado'),
         actions: [
           if (controller.fetching)
             const Center(
@@ -44,20 +58,18 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
                   );
                   return;
                 }
-                final result = await notifier.uploadLevel(
-                  isUserLevel: isUserLevel,
-                );
+                final result =
+                    await notifier.updateLevel(isUserLevel: isUserLevel);
                 if (!mounted) return;
                 if (result) {
                   showCustomSnackBar(
-                      context: context,
-                      text: 'Se ha subido el nuevo nivel correctamente');
+                      context: context, text: 'Se ha actualizado el nivel');
                   context.pop();
                   context.pop();
                 } else {
                   showCustomSnackBar(
                     context: context,
-                    text: 'Se ha producido un error al subir el nuevo nivel',
+                    text: 'Se ha producido un error al actualizar el nivel',
                     color: Colors.red,
                   );
                 }
@@ -81,11 +93,11 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
           ),
           const SizedBox(height: 10),
           if (isUserLevel)
-            const Padding(
-              padding: EdgeInsets.only(top: 15, bottom: 10),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Text(
-                'Autor: Prueba',
-                style: TextStyle(
+                'Autor: ${controller.authorId}',
+                style: const TextStyle(
                   fontSize: 18,
                 ),
               ),

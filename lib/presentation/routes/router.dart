@@ -1,5 +1,6 @@
 import 'package:cubetis/main.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_view.dart';
+import 'package:cubetis/presentation/modules/edit_level/update_user_level_view.dart';
 import 'package:cubetis/presentation/modules/levels/levels_view.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_view.dart';
 import 'package:cubetis/presentation/modules/new_level/upload_new_user_level_view.dart';
@@ -33,6 +34,11 @@ mixin RouterMixin on State<MyApp> {
         name: Routes.uploadNewLevel,
         path: '/upload-new-level',
         builder: (_, __) => const UploadNewUserLevelView(),
+      ),
+      GoRoute(
+        name: Routes.updateLevel,
+        path: '/update-level',
+        builder: (_, __) => const UpdateUserLevelView(),
       ),
       GoRoute(
         name: Routes.editLevel,

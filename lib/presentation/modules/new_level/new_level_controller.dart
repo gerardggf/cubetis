@@ -220,7 +220,8 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     final result = await levelsRepository.createLevel(
       level: LevelModel(
         id: '',
-        authorId: 'Prueba',
+        //sustituir prueba por id de usuario
+        authorId: isUserLevel ? 'Prueba' : '',
         difficulty: state.difficulty,
         name: state.name[0].toUpperCase() + state.name.substring(1),
         coinsPos: state.coinsPos,
@@ -231,7 +232,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         doors: state.doors,
         creationDate: DateTime.now().toString(),
       ),
-      isUserlevel: isUserLevel,
+      isUserLevel: isUserLevel,
     );
     if (result) {
       levelsRepository.getLevels();

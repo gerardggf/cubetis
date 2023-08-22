@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_controller.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_widget.dart';
-import 'package:cubetis/presentation/utils/custom_snack_bar.dart';
+import 'package:cubetis/presentation/routes/routes.dart';
 import 'package:cubetis/presentation/utils/dialogs/show_warning_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class EditLevelView extends ConsumerStatefulWidget {
-  const EditLevelView({
-    super.key,
-    required this.id,
-  });
+  const EditLevelView({super.key, required this.id});
 
   final String id;
 
@@ -74,32 +71,16 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
                 color: Colors.black,
               ),
             ),
-            if (controller.fetching)
-              const Center(
-                child: CircularProgressIndicator(),
+            IconButton(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              onPressed: () {
+                context.pushNamed(Routes.updateLevel);
+              },
+              icon: const Icon(
+                Icons.save,
+                color: Colors.black,
               ),
-            if (!controller.fetching)
-              IconButton(
-                onPressed: () async {
-                  final result = await notifier.updateLevel(widget.id);
-                  if (!mounted) return;
-                  if (result) {
-                    showCustomSnackBar(
-                        context: context, text: 'Se ha actualizado el nivel');
-                    context.pop();
-                  } else {
-                    showCustomSnackBar(
-                      context: context,
-                      text: 'Se ha producido un error al actualizar el nivel',
-                      color: Colors.red,
-                    );
-                  }
-                },
-                icon: const Icon(
-                  Icons.save,
-                  color: Colors.black,
-                ),
-              ),
+            ),
           ],
         ),
         body: canvasSize == null

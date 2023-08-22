@@ -57,6 +57,7 @@ class _NewLevelViewState extends ConsumerState<NewLevelView> {
               ),
             ),
             IconButton(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               onPressed: () {
                 context.pushNamed(Routes.uploadNewLevel);
               },

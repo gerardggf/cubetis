@@ -55,34 +55,34 @@ class _HomeViewState extends ConsumerState<HomeView> {
           },
           icon: const Icon(Icons.widgets_outlined),
         ),
-        actions: !ref.watch(levelsControllerProvider).isAdmin
-            ? []
-            : [
-                if (controller.level != null)
-                  IconButton(
-                    onPressed: () {
-                      context.pushNamed(
-                        Routes.editLevel,
-                        pathParameters: {
-                          "id": controller.level!.id.toString(),
-                        },
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.black,
-                    ),
-                  ),
-                IconButton(
-                  onPressed: () {
-                    context.pushNamed(Routes.newLevel);
+        actions: [
+          if (controller.level != null &&
+                  ref.watch(levelsControllerProvider).isAdmin ||
+              controller.level?.authorId == 'Prueba')
+            IconButton(
+              onPressed: () {
+                context.pushNamed(
+                  Routes.editLevel,
+                  pathParameters: {
+                    "id": controller.level!.id.toString(),
                   },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+                );
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
+            ),
+          IconButton(
+            onPressed: () {
+              context.pushNamed(Routes.newLevel);
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
       body: canvasSize == null
           ? const Center(

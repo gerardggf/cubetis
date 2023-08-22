@@ -65,47 +65,48 @@ class _LevelsViewState extends ConsumerState<LevelsView>
       appBar: AppBar(
         title: const Text('All levels'),
         actions: [
-          IconButton(
-            padding: const EdgeInsets.all(5),
-            onPressed: () async {
-              if (!controller.isAdmin) {
-                final result = await showPasswordDialog(
-                  context: context,
-                  title: 'Modo Administrador',
-                );
-                if (result.trim() != 'c1234') {
+          if (!ref.read(levelsControllerProvider).isUserLevels)
+            IconButton(
+              padding: const EdgeInsets.all(5),
+              onPressed: () async {
+                if (!controller.isAdmin) {
+                  final result = await showPasswordDialog(
+                    context: context,
+                    title: 'Modo Administrador',
+                  );
+                  if (result.trim() != 'c1234') {
+                    if (context.mounted) {
+                      showCustomSnackBar(
+                        context: context,
+                        text: 'La contraseña es incorrecta',
+                        color: Colors.red,
+                      );
+                    }
+                    return;
+                  }
+                  notifier.updateIsAdmin(true);
                   if (context.mounted) {
                     showCustomSnackBar(
                       context: context,
-                      text: 'La contraseña es incorrecta',
-                      color: Colors.red,
+                      text: 'Modo administrador activado',
                     );
                   }
-                  return;
+                } else {
+                  notifier.updateIsAdmin(false);
+                  if (context.mounted) {
+                    showCustomSnackBar(
+                      context: context,
+                      text: 'Modo administrador desactivado',
+                      color: Colors.orange,
+                    );
+                  }
                 }
-                notifier.updateIsAdmin(true);
-                if (context.mounted) {
-                  showCustomSnackBar(
-                    context: context,
-                    text: 'Modo administrador activado',
-                  );
-                }
-              } else {
-                notifier.updateIsAdmin(false);
-                if (context.mounted) {
-                  showCustomSnackBar(
-                    context: context,
-                    text: 'Modo administrador desactivado',
-                    color: Colors.orange,
-                  );
-                }
-              }
-            },
-            icon: Icon(
-              Icons.key,
-              color: controller.isAdmin ? Colors.blue : Colors.grey,
+              },
+              icon: Icon(
+                Icons.key,
+                color: controller.isAdmin ? Colors.blue : Colors.grey,
+              ),
             ),
-          ),
           IconButton(
             onPressed: () {
               context.pushNamed(Routes.info);

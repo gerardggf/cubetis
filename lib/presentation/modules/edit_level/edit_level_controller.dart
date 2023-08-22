@@ -1,6 +1,5 @@
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../const/const.dart';
@@ -37,6 +36,14 @@ class EditLevelController extends StateNotifier<EditLevelState> {
 
   void newFinishPos(int finish) {
     state = state.copyWith(finishPos: finish);
+  }
+
+  void updateName(String text) {
+    state = state.copyWith(name: text);
+  }
+
+  void updateDifficulty(int value) {
+    state = state.copyWith(difficulty: value);
   }
 
   void newDoorPos(int doorPos) {
@@ -200,21 +207,22 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     state = state.copyWith(fetching: value);
   }
 
-  Future<bool> updateLevel(String levelId) async {
+  Future<bool> updateLevel({bool isUserLevel = true}) async {
     updateFetching(true);
-    final docId = levelsRepository.allLevels
-        .where(
-          (e) => e.id == levelId,
-        )
-        .first
-        .id;
+    final levelId = editingLevel?.id;
+    if (levelId == null) {
+      updateFetching(false);
+      return false;
+    }
+
     final result = await levelsRepository.updateLevel(
-      id: docId,
+      isUserLevel: isUserLevel,
+      id: levelId,
       level: LevelModel(
-        id: docId,
-        authorId: 'Prueba',
-        difficulty: editingLevel!.difficulty,
-        name: editingLevel!.name,
+        id: levelId,
+        authorId: state.authorId,
+        difficulty: state.difficulty,
+        name: state.name,
         coinsPos: state.coinsPos,
         enemies: state.enemiesPos,
         finishPos: state.finishPos,
@@ -249,13 +257,8 @@ class EditLevelController extends StateNotifier<EditLevelState> {
   Future<void> loadLevelToUpdate(String id) async {
     try {
       editingLevel = levelsRepository.allLevels.firstWhere((e) => e.id == id);
-    } catch (e) {
-      if (kDebugMode) {
-        print(
-          e.toString(),
-        );
-      }
-      return;
+    } catch (_) {
+      editingLevel = await levelsRepository.getUserLevel(id);
     }
     if (editingLevel == null) return;
     state = state.copyWith(
@@ -265,6 +268,9 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       playerPos: editingLevel!.playerPos,
       finishPos: editingLevel!.finishPos,
       doors: editingLevel!.doors,
+      name: editingLevel!.name,
+      difficulty: editingLevel!.difficulty,
+      authorId: editingLevel!.authorId,
     );
   }
 }

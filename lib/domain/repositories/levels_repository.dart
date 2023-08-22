@@ -12,19 +12,20 @@ final levelsRepositoryProvider = Provider<LevelsRepository>(
 abstract class LevelsRepository {
   Future<bool> createLevel({
     required LevelModel level,
-    bool isUserlevel = true,
+    bool isUserLevel = true,
   });
 
   Future<bool> updateLevel({
     required String id,
     required LevelModel level,
+    bool isUserLevel = true,
   });
 
   Future<List<LevelModel>> getLevels();
 
   Future<bool> deleteLevel({
     required String id,
-    bool isUserlevel = true,
+    bool isUserLevel = true,
   });
 
   Stream<List<LevelModel>> subscribeToUserLevels();

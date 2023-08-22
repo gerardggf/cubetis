@@ -111,6 +111,10 @@ class HomeController extends StateNotifier<HomeState> {
     //finish level
     if (state.level!.finishPos == newPos &&
         state.points.length == state.level!.coinsPos.length) {
+      if (state.level!.id == levelsRepository.allLevels.last.id) {
+        updateIsPlaying(false);
+        return;
+      }
       final nextLevelId = levelsRepository
           .allLevels[levelsRepository.allLevels
                   .map((e) => e.id)
@@ -118,10 +122,7 @@ class HomeController extends StateNotifier<HomeState> {
                   .indexOf(state.level!.id) +
               1]
           .id;
-      if (nextLevelId == levelsRepository.allLevels.last.id) {
-        updateIsPlaying(false);
-        return;
-      }
+
       loadLevel(nextLevelId);
       newPos = state.level!.playerPos;
     }
@@ -164,21 +165,6 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   Future<void> loadLevel(String levelId) async {
-    // if (!levelsRepository.allLevels
-    //     .map((e) => e.id)
-    //     .toList()
-    //     .contains(levelId)) {
-    //   try {
-    //     levelId = levelsRepository.allLevels.map((e) => e.level).firstWhere(
-    //           (element) => element > levelId,
-    //         );
-    //   } catch (e) {
-    //     levelId = levelsRepository.allLevels.first.level;
-    //   }
-    // }
-    // print(levelsRepository.allLevels.map((e) => e.id));
-    // print(levelId);
-
     late LevelModel level;
     try {
       level = levelsRepository.allLevels[levelsRepository.allLevels
