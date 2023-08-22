@@ -14,17 +14,20 @@ final firebaseFirestoreServiceProvider = Provider<FirebaseFirestoreService>(
 );
 
 class FirebaseFirestoreService {
-  FirebaseFirestoreService(
-    this.firestore,
-  );
+  FirebaseFirestoreService(this.firestore);
 
   final FirebaseFirestore firestore;
 
   List<LevelModel> _allLevels = [];
 
-  Future<bool> createLevel(LevelModel level) async {
+  Future<bool> createLevel({
+    required LevelModel level,
+    bool userLevels = true,
+  }) async {
     try {
-      final collection = firestore.collection('levels');
+      final collection = firestore.collection(
+        userLevels ? 'user_levels' : 'levels',
+      );
       DocumentReference docRef = collection.doc();
       final levelWithId = level.copyWith(id: docRef.id);
       await docRef.set(
@@ -39,23 +42,10 @@ class FirebaseFirestoreService {
     }
   }
 
-  Stream<List<LevelModel>> subscribeToLevels() async* {
-    final collection = firestore.collection('levels');
-
-    final levels = collection.orderBy('level').snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => LevelModel.fromJson(doc.data()),
-              )
-              .toList(),
-        );
-    yield* levels;
-  }
-
   Future<List<LevelModel>> getLevels() async {
     final collection = firestore.collection('levels');
 
-    final levelsNotMapped = await collection.orderBy('level').get();
+    final levelsNotMapped = await collection.orderBy('difficulty').get();
 
     final levels = levelsNotMapped.docs
         .map(
@@ -71,9 +61,12 @@ class FirebaseFirestoreService {
   Future<bool> updateLevel({
     required String id,
     required LevelModel level,
+    bool userLevels = true,
   }) async {
     try {
-      final collection = firestore.collection('levels');
+      final collection = firestore.collection(
+        userLevels ? 'user_levels' : 'levels',
+      );
       DocumentReference docRef = collection.doc(id);
       await docRef.update(
         level.toJson(),
@@ -87,9 +80,14 @@ class FirebaseFirestoreService {
     }
   }
 
-  Future<bool> deleteLevel(String levelId) async {
+  Future<bool> deleteLevel({
+    required String levelId,
+    bool userLevels = true,
+  }) async {
     try {
-      final collection = firestore.collection('levels');
+      final collection = firestore.collection(
+        userLevels ? 'user_levels' : 'levels',
+      );
       DocumentReference docRef = collection.doc(levelId);
       await docRef.delete();
       return true;
@@ -102,4 +100,33 @@ class FirebaseFirestoreService {
   }
 
   List<LevelModel> get allLevels => _allLevels;
+
+//user levels ------------------------------------------------------------------------------
+
+  Future<LevelModel?> getUserLevel(String id) async {
+    final collection = firestore.collection('user_levels');
+
+    final levelNotMapped = await collection.doc(id).get();
+
+    if (levelNotMapped.data() == null) return null;
+    final level = LevelModel.fromJson(
+      levelNotMapped.data()!,
+    );
+    return level;
+  }
+
+  Stream<List<LevelModel>> subscribeToUserLevels() async* {
+    final collection = firestore.collection('user_levels');
+    final levels = collection.orderBy('creationDate').snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => LevelModel.fromJson(
+                  doc.data(),
+                ),
+              )
+              .toList(),
+        );
+
+    yield* levels;
+  }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/domain/repositories/preferences_repository.dart';
 import 'package:cubetis/presentation/modules/home/state/home_state.dart';
@@ -110,11 +111,18 @@ class HomeController extends StateNotifier<HomeState> {
     //finish level
     if (state.level!.finishPos == newPos &&
         state.points.length == state.level!.coinsPos.length) {
-      if (state.level!.level == levelsRepository.allLevels.length - 1) {
+      final nextLevelId = levelsRepository
+          .allLevels[levelsRepository.allLevels
+                  .map((e) => e.id)
+                  .toList()
+                  .indexOf(state.level!.id) +
+              1]
+          .id;
+      if (nextLevelId == levelsRepository.allLevels.last.id) {
         updateIsPlaying(false);
         return;
       }
-      loadLevel(state.level!.level + 1);
+      loadLevel(nextLevelId);
       newPos = state.level!.playerPos;
     }
 
@@ -145,34 +153,58 @@ class HomeController extends StateNotifier<HomeState> {
   //restart all levels and params
   void restartFromZero() {
     updateIsPlaying(false);
-    loadLevel(0);
+    loadLevel(levelsRepository.allLevels.first.id);
     gameTimer?.cancel();
     doorsTimer?.cancel();
     gameTimer = null;
     updateGameTimer(0);
     updatePlayerLives(GameParams.lives);
-    preferencesRepository.setLevel(0);
-    preferencesRepository.setMaxLevel(0);
+    preferencesRepository.setLevel(levelsRepository.allLevels.first.id);
+    //preferencesRepository.setMaxLevel(0);
   }
 
-  Future<void> loadLevel(int levelId) async {
-    if (!levelsRepository.allLevels
-        .map((e) => e.level)
-        .toList()
-        .contains(levelId)) {
-      try {
-        levelId = levelsRepository.allLevels.map((e) => e.level).firstWhere(
-              (element) => element > levelId,
-            );
-      } catch (e) {
-        levelId = levelsRepository.allLevels.first.level;
-      }
+  Future<void> loadLevel(String levelId) async {
+    // if (!levelsRepository.allLevels
+    //     .map((e) => e.id)
+    //     .toList()
+    //     .contains(levelId)) {
+    //   try {
+    //     levelId = levelsRepository.allLevels.map((e) => e.level).firstWhere(
+    //           (element) => element > levelId,
+    //         );
+    //   } catch (e) {
+    //     levelId = levelsRepository.allLevels.first.level;
+    //   }
+    // }
+    // print(levelsRepository.allLevels.map((e) => e.id));
+    // print(levelId);
+
+    late LevelModel level;
+    try {
+      level = levelsRepository.allLevels[levelsRepository.allLevels
+          .map((e) => e.id)
+          .toList()
+          .indexOf(levelId)];
+    } catch (e) {
+      level = levelsRepository.allLevels.first;
     }
 
-    final level = levelsRepository.allLevels.firstWhere(
-      (e) => e.level == levelId,
-    );
     await preferencesRepository.setLevel(levelId);
+
+    state = state.copyWith(level: level);
+    _updateCurrentEnemies();
+    clearPoints();
+    updateDoorsOpen(false);
+    doorsTimer?.cancel();
+    doorsTimer = null;
+    state = state.copyWith(playerPos: level.playerPos);
+    // print(preferencesRepository.level);
+    // print(state.level!.id);
+  }
+
+  Future<void> loadUserLevel(String id) async {
+    final level = await levelsRepository.getUserLevel(id);
+    if (level == null) return;
 
     state = state.copyWith(level: level);
     _updateCurrentEnemies();
@@ -202,13 +234,13 @@ class HomeController extends StateNotifier<HomeState> {
     updatePlayerLives(state.lives - 1);
     preferencesRepository.setLives(state.lives);
     if (state.lives <= 0) {
-      loadLevel(0);
+      loadLevel(levelsRepository.allLevels.first.id);
       updatePlayerLives(GameParams.lives);
       updateGameTimer(0);
-      preferencesRepository.setMaxLevel(0);
+      //preferencesRepository.setMaxLevel(0);
       return;
     }
-    loadLevel(state.level!.level);
+    loadLevel(state.level!.id);
   }
 
   //-----------------------------------------

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
 import 'package:cubetis/generated/translations.g.dart';
 import 'package:cubetis/presentation/routes/router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,12 +21,14 @@ void main() async {
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final friebaseFirestore = FirebaseFirestore.instance;
+  final firebaseAuth = FirebaseAuth.instance;
 
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
         firebaseFirestoreProvider.overrideWith((ref) => friebaseFirestore),
+        firebaseAuthProvider.overrideWith((ref) => firebaseAuth),
       ],
       child: const MyApp(),
     ),
@@ -33,6 +36,10 @@ void main() async {
 }
 
 final sharedPreferencesProvider = Provider<SharedPreferences>(
+  (ref) => throw UnimplementedError(),
+);
+
+final firebaseAuthProvider = Provider<FirebaseAuth>(
   (ref) => throw UnimplementedError(),
 );
 

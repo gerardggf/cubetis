@@ -11,29 +11,27 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   final SharedPreferences sharedPreferences;
 
   @override
-  int get level => sharedPreferences.getInt(Preferences.level.name) ?? 0;
+  String get levelId =>
+      sharedPreferences.getString(Preferences.level.name) ?? kFirstLevelId;
 
   @override
-  Future<void> setLevel(int level) async {
-    if (level >= maxLevel) {
-      setMaxLevel(level);
-    }
-    await sharedPreferences.setInt(
+  Future<void> setLevel(String levelId) async {
+    await sharedPreferences.setString(
       Preferences.level.name,
-      level,
+      levelId,
     );
   }
 
-  @override
-  int get maxLevel => sharedPreferences.getInt(Preferences.maxLevel.name) ?? 0;
+  // @override
+  // String get maxLevelId => sharedPreferences.getString(Preferences.maxLevel.name) ?? '';
 
-  @override
-  Future<void> setMaxLevel(int maxLevel) async {
-    await sharedPreferences.setInt(
-      Preferences.maxLevel.name,
-      level,
-    );
-  }
+  // @override
+  // Future<void> setMaxLevel(String maxLevelId) async {
+  //   await sharedPreferences.setString(
+  //     Preferences.maxLevel.name,
+  //     maxLevelId,
+  //   );
+  // }
 
   @override
   int get timeInSeconds =>

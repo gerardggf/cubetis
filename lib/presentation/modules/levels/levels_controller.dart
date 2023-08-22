@@ -17,4 +17,8 @@ class LevelsController extends StateNotifier<LevelsState> {
   void updateIsAdmin(bool value) {
     state = state.copyWith(isAdmin: value);
   }
+
+  void updateIsUserLevels(bool value) {
+    state = state.copyWith(isUserLevels: value);
+  }
 }

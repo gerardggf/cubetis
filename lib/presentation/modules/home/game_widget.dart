@@ -332,7 +332,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           child: TextButton(
             onPressed: () async {
               await notifier
-                  .loadLevel(ref.read(preferencesRepositoryProvider).level);
+                  .loadLevel(ref.read(preferencesRepositoryProvider).levelId);
 
               notifier.startGame();
             },
@@ -353,7 +353,7 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           child: TextButton(
             onPressed: () async {
               await notifier
-                  .loadLevel(ref.read(preferencesRepositoryProvider).level);
+                  .loadLevel(ref.read(preferencesRepositoryProvider).levelId);
 
               notifier.startGame();
             },

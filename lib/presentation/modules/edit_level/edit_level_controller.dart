@@ -200,11 +200,11 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     state = state.copyWith(fetching: value);
   }
 
-  Future<bool> updateLevel(int levelId) async {
+  Future<bool> updateLevel(String levelId) async {
     updateFetching(true);
     final docId = levelsRepository.allLevels
         .where(
-          (e) => e.level == levelId,
+          (e) => e.id == levelId,
         )
         .first
         .id;
@@ -212,7 +212,7 @@ class EditLevelController extends StateNotifier<EditLevelState> {
       id: docId,
       level: LevelModel(
         id: docId,
-        level: levelId,
+        authorId: 'Prueba',
         difficulty: editingLevel!.difficulty,
         name: editingLevel!.name,
         coinsPos: state.coinsPos,
@@ -246,9 +246,9 @@ class EditLevelController extends StateNotifier<EditLevelState> {
     );
   }
 
-  Future<void> loadLevelToUpdate(int level) async {
+  Future<void> loadLevelToUpdate(String id) async {
     try {
-      editingLevel = levelsRepository.allLevels[level];
+      editingLevel = levelsRepository.allLevels.firstWhere((e) => e.id == id);
     } catch (e) {
       if (kDebugMode) {
         print(

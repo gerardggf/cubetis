@@ -1,4 +1,5 @@
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,16 +7,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../utils/custom_snack_bar.dart';
 
-class UploadNewLevelView extends ConsumerStatefulWidget {
-  const UploadNewLevelView({super.key});
+class UploadNewUserLevelView extends ConsumerStatefulWidget {
+  const UploadNewUserLevelView({super.key});
 
   @override
-  ConsumerState<UploadNewLevelView> createState() => _UploadNewLevelViewState();
+  ConsumerState<UploadNewUserLevelView> createState() =>
+      _UploadNewLevelViewState();
 }
 
 final difficultyLevels = List<int>.generate(101, (index) => index);
 
-class _UploadNewLevelViewState extends ConsumerState<UploadNewLevelView> {
+class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
   final TextEditingController _nameController = TextEditingController(),
       _levelIdController = TextEditingController();
 
@@ -46,6 +48,14 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewLevelView> {
           if (!controller.fetching)
             IconButton(
               onPressed: () async {
+                if (ref.read(levelsControllerProvider).isUserLevels &&
+                    controller.name.trim().isEmpty) {
+                  showCustomSnackBar(
+                    context: context,
+                    text: 'El nombre del nivel no puede estar vacío',
+                  );
+                  return;
+                }
                 final result = await notifier.uploadLevel();
                 if (!mounted) return;
                 if (result) {
@@ -80,16 +90,14 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewLevelView> {
             },
           ),
           const SizedBox(height: 10),
-          TextField(
-            enabled: false,
-            controller: _levelIdController,
-            onChanged: (value) {
-              notifier.updateLevelId(
-                int.tryParse(value) ?? 0,
-              );
-            },
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Nivel'),
+          const Padding(
+            padding: EdgeInsets.only(top: 15, bottom: 10),
+            child: Text(
+              'Autor: Prueba',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           const Text(

@@ -1,6 +1,8 @@
 import 'package:cubetis/const/const.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/presentation/modules/levels/levels_controller.dart';
+import 'package:cubetis/presentation/modules/levels/state/levels_state.dart';
 import 'package:cubetis/presentation/modules/new_level/state/new_level_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +11,7 @@ final newLevelControllerProvider =
   (ref) => NewLevelController(
     NewLevelState(),
     ref.read(levelsRepositoryProvider),
+    ref.read(levelsControllerProvider),
   ),
 );
 
@@ -16,9 +19,11 @@ class NewLevelController extends StateNotifier<NewLevelState> {
   NewLevelController(
     super.state,
     this.levelsRepository,
+    this.levelsController,
   );
 
   final LevelsRepository levelsRepository;
+  final LevelsState levelsController;
 
   int selectedEnemy = 0;
   bool isKeyPos = false;
@@ -37,10 +42,6 @@ class NewLevelController extends StateNotifier<NewLevelState> {
 
   void updateName(String name) {
     state = state.copyWith(name: name);
-  }
-
-  void updateLevelId(int levelId) {
-    state = state.copyWith(levelId: levelId);
   }
 
   void updateDifficulty(int difficulty) {
@@ -213,10 +214,11 @@ class NewLevelController extends StateNotifier<NewLevelState> {
           (e) => e.enemiesPos.isNotEmpty,
         )
         .toList();
+
     final result = await levelsRepository.createLevel(
       LevelModel(
         id: '',
-        level: levelsRepository.allLevels.length,
+        authorId: 'Prueba',
         difficulty: state.difficulty,
         name: state.name[0].toUpperCase() + state.name.substring(1),
         coinsPos: state.coinsPos,
@@ -231,6 +233,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     if (result) {
       levelsRepository.getLevels();
     }
+
     updateFetching(false);
     return result;
   }

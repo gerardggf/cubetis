@@ -2,7 +2,7 @@ import 'package:cubetis/main.dart';
 import 'package:cubetis/presentation/modules/edit_level/edit_level_view.dart';
 import 'package:cubetis/presentation/modules/levels/levels_view.dart';
 import 'package:cubetis/presentation/modules/new_level/new_level_view.dart';
-import 'package:cubetis/presentation/modules/new_level/upload_new_level_view.dart';
+import 'package:cubetis/presentation/modules/new_level/upload_new_user_level_view.dart';
 import 'package:cubetis/presentation/modules/offline/offline_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -32,15 +32,15 @@ mixin RouterMixin on State<MyApp> {
       GoRoute(
         name: Routes.uploadNewLevel,
         path: '/upload-new-level',
-        builder: (_, __) => const UploadNewLevelView(),
+        builder: (_, __) => const UploadNewUserLevelView(),
       ),
       GoRoute(
         name: Routes.editLevel,
         path: '/edit-level/:id',
         builder: (_, state) {
-          final level = state.pathParameters['id'] ?? '';
+          final levelId = state.pathParameters['id'] ?? '';
           return EditLevelView(
-            levelId: int.tryParse(level) ?? 0,
+            id: levelId,
           );
         },
       ),

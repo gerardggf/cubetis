@@ -9,10 +9,10 @@ final preferencesRepositoryProvider = Provider<PreferencesRepository>(
 );
 
 abstract class PreferencesRepository {
-  Future<void> setLevel(int level);
-  int get level;
-  Future<void> setMaxLevel(int maxLevel);
-  int get maxLevel;
+  Future<void> setLevel(String levelId);
+  String get levelId;
+  // Future<void> setMaxLevel(String maxLevelId);
+  // String get maxLevelId;
   Future<void> setLives(int lives);
   int get lives;
   Future<void> setTimeInSeconds(int timeInSeconds);

@@ -1,8 +1,8 @@
 class LevelModel {
   final String id;
-  final int level;
-  final int difficulty;
   final String name;
+  final int difficulty;
+  final String authorId;
   final List<int> coinsPos;
   final List<EnemyModel> enemies;
   final DoorModel? doors;
@@ -13,9 +13,9 @@ class LevelModel {
 
   LevelModel({
     required this.id,
-    required this.level,
-    required this.difficulty,
     required this.name,
+    required this.difficulty,
+    required this.authorId,
     required this.coinsPos,
     required this.enemies,
     this.doors,
@@ -27,9 +27,9 @@ class LevelModel {
 
   LevelModel copyWith({
     String? id,
-    int? level,
-    int? difficulty,
     String? name,
+    int? difficulty,
+    String? authorId,
     List<int>? coinsPos,
     List<EnemyModel>? enemies,
     DoorModel? doors,
@@ -40,9 +40,9 @@ class LevelModel {
   }) =>
       LevelModel(
         id: id ?? this.id,
-        level: level ?? this.level,
-        difficulty: difficulty ?? this.difficulty,
         name: name ?? this.name,
+        difficulty: difficulty ?? this.difficulty,
+        authorId: authorId ?? this.authorId,
         coinsPos: coinsPos ?? this.coinsPos,
         enemies: enemies ?? this.enemies,
         doors: doors ?? this.doors,
@@ -54,9 +54,9 @@ class LevelModel {
 
   factory LevelModel.fromJson(Map<String, dynamic> json) => LevelModel(
         id: json["id"],
-        level: json["level"],
-        difficulty: json["difficulty"],
         name: json["name"],
+        difficulty: json["difficulty"],
+        authorId: json["authorId"],
         coinsPos: List<int>.from(
           json["coinsPos"].map((x) => x),
         ),
@@ -65,7 +65,11 @@ class LevelModel {
             (x) => EnemyModel.fromJson(x),
           ),
         ),
-        doors: json["doors"] == null ? null : DoorModel.fromJson(json["doors"]),
+        doors: json["doors"] == null
+            ? null
+            : DoorModel.fromJson(
+                json["doors"],
+              ),
         playerPos: json["playerPos"],
         finishPos: json["finishPos"],
         wallsPos: List<int>.from(
@@ -76,10 +80,12 @@ class LevelModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "level": level,
-        "difficulty": difficulty,
         "name": name,
-        "coinsPos": List<dynamic>.from(coinsPos.map((x) => x)),
+        "difficulty": difficulty,
+        "authorId": authorId,
+        "coinsPos": List<dynamic>.from(
+          coinsPos.map((x) => x),
+        ),
         "enemies": List<dynamic>.from(
           enemies.map(
             (x) => x.toJson(),

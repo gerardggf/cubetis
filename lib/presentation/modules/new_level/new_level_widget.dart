@@ -35,7 +35,6 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
   Widget build(BuildContext context) {
     final controller = ref.watch(newLevelControllerProvider);
     final notifier = ref.watch(newLevelControllerProvider.notifier);
-
     final double objectButtonSize = widget.canvasSize == null
         ? 0
         : widget.canvasSize!.width / GameParams.columns;
@@ -408,7 +407,7 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
                       notifier.isKeyPos = true;
                       setState(() {});
                     },
-                    child: const Text('DoorKey'),
+                    child: const Text('Key'),
                   ),
                   Text(
                     controller.doors?.doorKeyPos.join(', ') ?? '',
@@ -420,26 +419,33 @@ class _NewLevelWidgetState extends ConsumerState<NewLevelWidget> {
         ),
         if (controller.doors != null)
           Expanded(
-            child: Center(
-              child: DropdownButton<int>(
-                value: controller.doors?.timeInSeconds ??
-                    GameParams.defaultDoorDuration,
-                onChanged: (value) {
-                  notifier.updateDoorDuration(
-                    value ?? GameParams.defaultDoorDuration,
-                  );
-                },
-                items: [
-                  for (var doorsSecondsOption in doorsSecondsOptions)
-                    DropdownMenuItem<int>(
-                      value: doorsSecondsOption,
-                      child: Text(
-                        doorsSecondsOption.toString(),
-                        style: const TextStyle(
-                          fontSize: 18,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Duración:'),
+                  DropdownButton<int>(
+                    value: controller.doors?.timeInSeconds ??
+                        GameParams.defaultDoorDuration,
+                    onChanged: (value) {
+                      notifier.updateDoorDuration(
+                        value ?? GameParams.defaultDoorDuration,
+                      );
+                    },
+                    items: [
+                      for (var doorsSecondsOption in doorsSecondsOptions)
+                        DropdownMenuItem<int>(
+                          value: doorsSecondsOption,
+                          child: Text(
+                            '${doorsSecondsOption.toString()} seg.',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                    ],
+                  ),
                 ],
               ),
             ),

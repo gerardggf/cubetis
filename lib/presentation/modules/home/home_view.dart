@@ -42,7 +42,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Nivel ${controller.level?.level ?? ref.read(preferencesRepositoryProvider).level}',
+          controller.level?.name ?? '??',
           style: const TextStyle(
             color: Colors.black,
           ),
@@ -64,7 +64,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       context.pushNamed(
                         Routes.editLevel,
                         pathParameters: {
-                          "id": controller.level!.level.toString(),
+                          "id": controller.level!.id.toString(),
                         },
                       );
                     },

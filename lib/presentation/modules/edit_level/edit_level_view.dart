@@ -10,10 +10,10 @@ import 'package:go_router/go_router.dart';
 class EditLevelView extends ConsumerStatefulWidget {
   const EditLevelView({
     super.key,
-    required this.levelId,
+    required this.id,
   });
 
-  final int levelId;
+  final String id;
 
   @override
   ConsumerState<EditLevelView> createState() => _EditLevelViewState();
@@ -31,7 +31,7 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
         canvasSize = MediaQuery.of(context).size;
         await ref
             .read(editLevelControllerProvider.notifier)
-            .loadLevelToUpdate(widget.levelId);
+            .loadLevelToUpdate(widget.id);
         setState(() {});
       },
     );
@@ -49,7 +49,7 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Level ${widget.levelId}',
+            'Level ${widget.id}',
             style: const TextStyle(
               color: Colors.black,
             ),
@@ -81,18 +81,16 @@ class _EditLevelViewState extends ConsumerState<EditLevelView> {
             if (!controller.fetching)
               IconButton(
                 onPressed: () async {
-                  final result = await notifier.updateLevel(widget.levelId);
+                  final result = await notifier.updateLevel(widget.id);
                   if (!mounted) return;
                   if (result) {
                     showCustomSnackBar(
-                        context: context,
-                        text: 'Se ha actualizado el nivel ${widget.levelId}');
+                        context: context, text: 'Se ha actualizado el nivel');
                     context.pop();
                   } else {
                     showCustomSnackBar(
                       context: context,
-                      text:
-                          'Se ha producido un error al actualizar el nivel ${widget.levelId}',
+                      text: 'Se ha producido un error al actualizar el nivel',
                       color: Colors.red,
                     );
                   }

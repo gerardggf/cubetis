@@ -19,3 +19,5 @@ const double kBtnSize = 60;
 
 //color principal de todo el juego
 const Color kColor = Colors.blue;
+
+const kFirstLevelId = 'S2UIVypHBfgeeyw2ii0p';

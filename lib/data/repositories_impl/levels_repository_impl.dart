@@ -1,11 +1,16 @@
 import 'package:cubetis/data/services/firebase_firestore_service.dart';
 import 'package:cubetis/domain/models/level_model.dart';
 import 'package:cubetis/domain/repositories/levels_repository.dart';
+import 'package:cubetis/presentation/modules/levels/state/levels_state.dart';
 
 class LevelsRepositoryImpl implements LevelsRepository {
-  LevelsRepositoryImpl(this.firebaseFirestoreService);
+  LevelsRepositoryImpl(
+    this.firebaseFirestoreService,
+    this.levelsState,
+  );
 
   final FirebaseFirestoreService firebaseFirestoreService;
+  final LevelsState levelsState;
 
   @override
   Future<bool> createLevel(LevelModel level) {
@@ -26,24 +31,32 @@ class LevelsRepositoryImpl implements LevelsRepository {
     //   wallsPos: nivelImportado["barreras"],
     //   creationDate: DateTime.now().toString(),
     // );
-    return firebaseFirestoreService.createLevel(level);
+    final userLevels = levelsState.isUserLevels;
+    return firebaseFirestoreService.createLevel(
+      level: level,
+      userLevels: userLevels,
+    );
   }
 
   @override
   Future<bool> deleteLevel(String id) {
-    return firebaseFirestoreService.deleteLevel(id);
+    final userLevels = levelsState.isUserLevels;
+    return firebaseFirestoreService.deleteLevel(
+      levelId: id,
+      userLevels: userLevels,
+    );
   }
 
   @override
-  Stream<List<LevelModel>> subscribeToLevels() {
-    return firebaseFirestoreService.subscribeToLevels();
-  }
-
-  @override
-  Future<bool> updateLevel({required String id, required LevelModel level}) {
+  Future<bool> updateLevel({
+    required String id,
+    required LevelModel level,
+  }) {
+    final userLevels = levelsState.isUserLevels;
     return firebaseFirestoreService.updateLevel(
       id: id,
       level: level,
+      userLevels: userLevels,
     );
   }
 
@@ -53,5 +66,17 @@ class LevelsRepositoryImpl implements LevelsRepository {
   @override
   Future<List<LevelModel>> getLevels() {
     return firebaseFirestoreService.getLevels();
+  }
+
+  //user levels --------------------------------------------------
+
+  @override
+  Future<LevelModel?> getUserLevel(String id) {
+    return firebaseFirestoreService.getUserLevel(id);
+  }
+
+  @override
+  Stream<List<LevelModel>> subscribeToUserLevels() {
+    return firebaseFirestoreService.subscribeToUserLevels();
   }
 }
