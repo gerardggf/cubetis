@@ -42,7 +42,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          controller.level?.name ?? '??',
+          controller.level?.name ?? '',
           style: const TextStyle(
             color: Colors.black,
           ),

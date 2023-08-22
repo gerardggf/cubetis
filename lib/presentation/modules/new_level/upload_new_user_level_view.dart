@@ -32,6 +32,8 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
     );
   }
 
+  bool isUserLevel = true;
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(newLevelControllerProvider);
@@ -48,15 +50,16 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
           if (!controller.fetching)
             IconButton(
               onPressed: () async {
-                if (ref.read(levelsControllerProvider).isUserLevels &&
-                    controller.name.trim().isEmpty) {
+                if (isUserLevel && controller.name.trim().isEmpty) {
                   showCustomSnackBar(
                     context: context,
                     text: 'El nombre del nivel no puede estar vacío',
                   );
                   return;
                 }
-                final result = await notifier.uploadLevel();
+                final result = await notifier.uploadLevel(
+                  isUserLevel: isUserLevel,
+                );
                 if (!mounted) return;
                 if (result) {
                   showCustomSnackBar(
@@ -138,6 +141,18 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
               ),
             ],
           ),
+          if (ref.read(levelsControllerProvider).isAdmin)
+            SwitchListTile(
+              title: const Text('Is user level'),
+              value: isUserLevel,
+              onChanged: (value) {
+                setState(
+                  () {
+                    isUserLevel = value;
+                  },
+                );
+              },
+            ),
         ],
       ),
     );

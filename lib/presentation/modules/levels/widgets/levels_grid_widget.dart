@@ -38,7 +38,7 @@ class LevelsGridWidget extends ConsumerWidget {
                     content: '¿Estás seguro/a que quieres eliminar el nivel?',
                     onPressedConfirm: () async {
                       await ref.read(levelsRepositoryProvider).deleteLevel(
-                            allLevels[index].id,
+                            id: allLevels[index].id,
                           );
                       await ref.read(levelsRepositoryProvider).getLevels();
                       if (context.mounted) {

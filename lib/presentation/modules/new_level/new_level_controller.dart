@@ -207,7 +207,9 @@ class NewLevelController extends StateNotifier<NewLevelState> {
     state = state.copyWith(fetching: value);
   }
 
-  Future<bool> uploadLevel() async {
+  Future<bool> uploadLevel({
+    bool isUserLevel = true,
+  }) async {
     updateFetching(true);
     final enemies = state.enemiesPos
         .where(
@@ -216,7 +218,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         .toList();
 
     final result = await levelsRepository.createLevel(
-      LevelModel(
+      level: LevelModel(
         id: '',
         authorId: 'Prueba',
         difficulty: state.difficulty,
@@ -229,6 +231,7 @@ class NewLevelController extends StateNotifier<NewLevelState> {
         doors: state.doors,
         creationDate: DateTime.now().toString(),
       ),
+      isUserlevel: isUserLevel,
     );
     if (result) {
       levelsRepository.getLevels();
