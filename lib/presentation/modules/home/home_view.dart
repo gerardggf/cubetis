@@ -73,15 +73,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 color: Colors.black,
               ),
             ),
-          IconButton(
-            onPressed: () {
-              context.pushNamed(Routes.newLevel);
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.black,
+          if (ref.watch(levelsControllerProvider).isUserLevels ||
+              ref.watch(levelsControllerProvider).isAdmin)
+            IconButton(
+              onPressed: () {
+                context.pushNamed(Routes.newLevel);
+              },
+              icon: const Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
             ),
-          ),
         ],
       ),
       body: canvasSize == null

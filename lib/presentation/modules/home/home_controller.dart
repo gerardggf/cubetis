@@ -115,6 +115,11 @@ class HomeController extends StateNotifier<HomeState> {
         updateIsPlaying(false);
         return;
       }
+
+      if (state.level!.authorId.isNotEmpty) {
+        updateIsPlaying(false);
+        return;
+      }
       final nextLevelId = levelsRepository
           .allLevels[levelsRepository.allLevels
                   .map((e) => e.id)
@@ -173,6 +178,9 @@ class HomeController extends StateNotifier<HomeState> {
           .indexOf(levelId)];
     } catch (e) {
       level = levelsRepository.allLevels.first;
+      if (state.level!.authorId.isNotEmpty) {
+        level = (await levelsRepository.getUserLevel(levelId))!;
+      }
     }
 
     await preferencesRepository.setLevel(levelId);

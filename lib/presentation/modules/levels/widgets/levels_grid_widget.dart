@@ -81,28 +81,31 @@ class LevelsGridWidget extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  allLevels[index].name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  'Diff: ${allLevels[index].difficulty.toString()}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-                if (allLevels[index].name.isNotEmpty)
-                  Text(
-                    allLevels[index].name,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Colors.white38,
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(
+                      allLevels[index].name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
+                ),
+                Expanded(
+                  child: Text(
+                    'Diff: ${allLevels[index].difficulty.toString()}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
                 // Text(
                 //   allLevels[index].name,
                 //   style: const TextStyle(

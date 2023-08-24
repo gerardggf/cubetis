@@ -78,25 +78,38 @@ class UserLevelsGridWidget extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      data[index].name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Text(
+                          data[index].name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    Text(
-                      'Diff: ${data[index].difficulty}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
+                    Expanded(
+                      child: Text(
+                        'Diff: ${data[index].difficulty}',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    Text(
-                      data[index].authorId,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Colors.white38,
+                    Expanded(
+                      child: Text(
+                        data[index].authorId,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white38,
+                        ),
                       ),
                     ),
                   ],

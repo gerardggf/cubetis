@@ -295,6 +295,8 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
       );
 
   Widget _buildPausedScreen() {
+    final controller = ref.watch(homeControllerProvider);
+
     final notifier = ref.watch(homeControllerProvider.notifier);
     return Stack(
       children: [
@@ -331,6 +333,11 @@ class _GameWidgetState extends ConsumerState<GameWidget> {
           right: 0,
           child: TextButton(
             onPressed: () async {
+              if (controller.level!.authorId.isNotEmpty) {
+                await notifier.loadLevel(controller.level!.id);
+                notifier.startGame();
+                return;
+              }
               await notifier
                   .loadLevel(ref.read(preferencesRepositoryProvider).levelId);
 

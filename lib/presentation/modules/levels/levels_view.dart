@@ -67,7 +67,7 @@ class _LevelsViewState extends ConsumerState<LevelsView>
           controller.isUserLevels ? 'User levels' : 'Game levels',
         ),
         actions: [
-          if (!ref.read(levelsControllerProvider).isUserLevels)
+          if (!ref.watch(levelsControllerProvider).isUserLevels)
             IconButton(
               padding: const EdgeInsets.all(5),
               onPressed: () async {
@@ -117,15 +117,17 @@ class _LevelsViewState extends ConsumerState<LevelsView>
               Icons.info_outline,
             ),
           ),
-          IconButton(
-            padding: const EdgeInsets.all(5),
-            onPressed: () {
-              context.pushNamed(Routes.newLevel);
-            },
-            icon: const Icon(
-              Icons.add,
+          if (ref.watch(levelsControllerProvider).isUserLevels ||
+              controller.isAdmin)
+            IconButton(
+              padding: const EdgeInsets.all(5),
+              onPressed: () {
+                context.pushNamed(Routes.newLevel);
+              },
+              icon: const Icon(
+                Icons.add,
+              ),
             ),
-          ),
         ],
         bottom: TabBar(
           controller: _tabController,
