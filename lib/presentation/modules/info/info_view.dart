@@ -7,7 +7,17 @@ class InfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Información"),
+        leading: const BackButton(
+          color: Colors.black,
+        ),
+        elevation: 0,
+        title: const Text(
+          "Información",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

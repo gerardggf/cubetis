@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/services/authentication_repository_impl.dart';
+import '../../data/repositories_impl/authentication_repository_impl.dart';
 import '../../data/services/firebase_auth_service.dart';
 import '../either/either.dart';
 import '../models/user_model.dart';

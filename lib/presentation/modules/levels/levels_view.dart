@@ -63,8 +63,15 @@ class _LevelsViewState extends ConsumerState<LevelsView>
 
     return Scaffold(
       appBar: AppBar(
+        leading: const BackButton(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
         title: Text(
           controller.isUserLevels ? 'User levels' : 'Game levels',
+          style: const TextStyle(
+            color: Colors.black,
+          ),
         ),
         actions: [
           if (!ref.watch(levelsControllerProvider).isUserLevels)
@@ -115,6 +122,7 @@ class _LevelsViewState extends ConsumerState<LevelsView>
             },
             icon: const Icon(
               Icons.info_outline,
+              color: Colors.black,
             ),
           ),
           if (ref.watch(levelsControllerProvider).isUserLevels ||
@@ -126,6 +134,7 @@ class _LevelsViewState extends ConsumerState<LevelsView>
               },
               icon: const Icon(
                 Icons.add,
+                color: Colors.black,
               ),
             ),
         ],
@@ -133,10 +142,16 @@ class _LevelsViewState extends ConsumerState<LevelsView>
           controller: _tabController,
           tabs: const [
             Tab(
-              icon: Icon(Icons.now_widgets_outlined),
+              icon: Icon(
+                Icons.now_widgets_outlined,
+                color: Colors.black,
+              ),
             ),
             Tab(
-              icon: Icon(Icons.people),
+              icon: Icon(
+                Icons.people,
+                color: Colors.black,
+              ),
             ),
           ],
         ),

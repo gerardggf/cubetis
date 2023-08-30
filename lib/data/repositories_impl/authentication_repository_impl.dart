@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/either/either.dart';
 import '../../domain/models/user_model.dart';
 import '../../domain/repositories/authentication_repository.dart';
-import 'firebase_auth_service.dart';
+import '../services/firebase_auth_service.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl(
