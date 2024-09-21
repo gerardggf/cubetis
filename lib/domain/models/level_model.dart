@@ -91,7 +91,7 @@ class LevelModel {
             (x) => x.toJson(),
           ),
         ),
-        "doors": doors != null ? doors!.toJson() : null,
+        "doors": doors?.toJson(),
         "playerPos": playerPos,
         "finishPos": finishPos,
         "wallsPos": List<dynamic>.from(

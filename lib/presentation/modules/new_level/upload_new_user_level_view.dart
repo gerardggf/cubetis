@@ -47,7 +47,7 @@ class _UploadNewLevelViewState extends ConsumerState<UploadNewUserLevelView> {
                 final result = await notifier.uploadLevel(
                   isUserLevel: isUserLevel,
                 );
-                if (!mounted) return;
+                if (!context.mounted) return;
                 if (result) {
                   showCustomSnackBar(
                       context: context,

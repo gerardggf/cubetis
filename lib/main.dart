@@ -20,14 +20,14 @@ void main() async {
   ]);
 
   final sharedPreferences = await SharedPreferences.getInstance();
-  final friebaseFirestore = FirebaseFirestore.instance;
+  final firebaseFirestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
 
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-        firebaseFirestoreProvider.overrideWith((ref) => friebaseFirestore),
+        firebaseFirestoreProvider.overrideWith((ref) => firebaseFirestore),
         firebaseAuthProvider.overrideWith((ref) => firebaseAuth),
       ],
       child: const MyApp(),
